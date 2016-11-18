@@ -10,9 +10,19 @@ lifeworks.getUsers = () => {
     method: 'GET',
      headers: {
        'Accept': 'application/vnd.wam-api-v1.3+json',
-       'Wam-Token': '9iuz5e740ed151473bf61350d236b33ecd735e740ed151473bf61350d236b33ecd73'
+       'Wam-Token': '9iuz86ee4d6bb552c1dca05b69a6a5cfac7b86ee4d6bb552c1dca05b69a6a5cfac7b'
      }
   }).then(response => response.json());
 };
+
+lifeworks.login = req => {
+  return fetch('https://api.test.lifeworks.com/auth/mobile', {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/vnd.wam-api-v1.3+json',
+    },
+    body: req,
+  }).then(response => response.json());
+}
 
 module.exports = lifeworks;
