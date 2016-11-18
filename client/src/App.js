@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import './App.scss';
 
 import SubComponent from './components/subComponent';
+import UserList from './components/userList';
 
 class App extends Component {
 
@@ -9,6 +10,7 @@ class App extends Component {
         super(props);
         this.state = {
           myTitle: 'Wrong title',
+          users: ['test'],
         };
     }
 
@@ -30,6 +32,7 @@ class App extends Component {
               <h1 className='red'>PropTypes title: {this.props.title}</h1>
               <h1 className='red'>API title: {this.state.myTitle}</h1>
               <SubComponent />
+              <UserList users={this.state.users}/>
             </div>
         );
     }
