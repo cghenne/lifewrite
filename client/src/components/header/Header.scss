@@ -1,18 +1,29 @@
 @import "../../App";
 
 $headerHeight: 50px;
+$headerBackgroundColor: #222;
 
 header {
   height: $headerHeight;
-  background: #222;
+  background: $headerBackgroundColor;
   color: #efefef;
 
   img {
     height: inherit;
   }
+
   div {
-    display: inline-block;
+    float: left;
     height: inherit;
     line-height: $headerHeight;
+  }
+
+  .status {
+    float: right;
+
+    select {
+      background-color: inherit;
+      border: none;
+    }
   }
 }
