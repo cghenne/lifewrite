@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import './css/Normalize.scss';
 import './App.scss';
 
 import SubComponent from './components/subComponent';
@@ -17,6 +16,13 @@ class App extends Component {
     }
 
     componentDidMount() {
+      var io = require('socket.io-client'),
+      socket = io.connect('http://localhost:4000');
+      // socket.on('connect', function () { console.log("socket connected"); });
+      // socket.emit('private message', { user: 'me', msg: 'whazzzup?' });
+
+
+
       fetch(`http://localhost:4000/api/test`)
           .then((results) => results.json())
           .then((results) => {
