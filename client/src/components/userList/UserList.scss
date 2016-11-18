@@ -1,11 +1,54 @@
 .users {
   float: right;
-  width: 230px;
+  width: 300px;
   height: 100vh;
   background-color: #bbb;
   position: fixed;
   top: 0;
   right: 0;
   z-index: 1;
-  padding: 50px 0 0 20px;
+  padding-top: 50px;
+
+  ul {
+    margin: 0;
+    padding: 0;
+  }
+
+  h3 {
+    background-color: blue;
+    height: 30px;
+    line-height: 30px;
+    margin: 0;
+    padding: 5px 10px;
+    background-color: #aaa;
+  }
+
+  li {
+    list-style: none;
+    padding: 4px 10px;
+    border-bottom: 1px dotted #ddd;
+  }
+
+  li:hover {
+    background-color: #afafaf;
+  }
+
+  li::before {
+    content: '';
+    margin-right: 3px;
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+  }
+
+  li.online::before {
+    background-color: green;
+  }
+
+  li.away::before {
+    background-color: orange;
+  }
 }
