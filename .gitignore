@@ -10,3 +10,6 @@ build
 .DS_Store
 npm-debug.log
 Thumbs.db
+
+# docker
+*.json.gzip
