@@ -2,9 +2,25 @@
 
 LifeWorks Hackathon
 
+# Setup
+* install docker ()
+* run docker application (osx and windows only)
+
+Setup all dependencies
+
+```
+./dicker.sh up
+```
+
+Login to the SSH
+
+```
+./dicker.sh ssh
+```
 
 ## Client Instructions
 
+From under terminal: 
 - `npm install` (once)
 
 - `npm run client` to start the client development build at [http://localhost:3000](http://localhost:3000)
