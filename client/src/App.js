@@ -39,10 +39,12 @@ class App extends Component {
         return (
             <div>
               <Header />
-              <h1 className='red'>PropTypes title: {this.props.title}</h1>
-              <h1 className='red'>API title: {this.state.myTitle}</h1>
-              <SubComponent />
               <UserList users={this.state.users}/>
+              <div className="content-wrapper">
+                <h1 className='red'>PropTypes title: {this.props.title}</h1>
+                <h1 className='red'>API title: {this.state.myTitle}</h1>
+              </div>
+              <SubComponent />
             </div>
         );
     }

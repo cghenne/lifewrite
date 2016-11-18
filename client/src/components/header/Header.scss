@@ -5,8 +5,12 @@ $headerBackgroundColor: #222;
 
 header {
   height: $headerHeight;
+  width: 100%;
   background: $headerBackgroundColor;
   color: #efefef;
+  position: fixed;
+  top: 0;
+  z-index: 2;
 
   img {
     height: inherit;
@@ -18,8 +22,13 @@ header {
     line-height: $headerHeight;
   }
 
+  .logo {
+    margin-left: 20px;
+  }
+
   .status {
     float: right;
+    margin-right: 20px;
 
     select {
       background-color: inherit;
