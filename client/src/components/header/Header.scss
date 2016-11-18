@@ -1,0 +1,18 @@
+@import "../../App";
+
+$headerHeight: 50px;
+
+header {
+  height: $headerHeight;
+  background: #222;
+  color: #efefef;
+
+  img {
+    height: inherit;
+  }
+  div {
+    display: inline-block;
+    height: inherit;
+    line-height: $headerHeight;
+  }
+}
