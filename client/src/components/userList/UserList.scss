@@ -1,3 +1,11 @@
-.blue {
-  color: blue;
+.users {
+  float: right;
+  width: 230px;
+  height: 100vh;
+  background-color: #bbb;
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 1;
+  padding: 50px 0 0 20px;
 }

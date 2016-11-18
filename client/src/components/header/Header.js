@@ -3,7 +3,7 @@ import logo from '../../images/Lifewrite.png';
 import './Header.scss';
 
 const Header = () => (
-  <header className="content-wrapper">
+  <header>
       <div className="logo">
         <img src={logo} alt="logo" />
       </div>
