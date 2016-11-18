@@ -1,10 +1,15 @@
 import React from 'react';
 import './SubComponent.scss';
 
-const SubComponent = () => (
-  <div className='blue'>
-    I'm blue
-  </div>
-);
+var Message = React.createClass({
+  render() {
+      return (
+          <div className="message">
+              <strong>{this.props.user}: </strong> 
+              <span>{this.props.text}</span>
+          </div>
+      );
+  }
+});
 
 export default SubComponent;
