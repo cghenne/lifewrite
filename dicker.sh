@@ -18,6 +18,6 @@ case "$mode" in
       docker run --name node -v "$(pwd)":/data --link mongo:mongo -w /data -p 8082:8082 node bash
       ;;
     "ssh" )
-      docker run -it -v "$(pwd)":/data --link mongo:mongo -w /data -p 3000:3000 node bash
+      docker run -it -v "$(pwd)":/data --link mongo:mongo -w /data -p 3000:3000 -p 4000:4000 node bash
       ;;
 esac
