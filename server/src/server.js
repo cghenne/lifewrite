@@ -10,6 +10,9 @@ const api = require('./api/');
 const fs = require('fs');
 const Utils = require('./utils/Utils');
 
+var mongoose = require('mongoose');
+mongoose.connect(process.env.MONGO_PORT_27017_TCP_ADDR + ':' + process.env.MONGO_PORT_27017_TCP_PORT);
+
 app.get('/', (req, res) => {
     res.send('Hello World!');
 });
@@ -34,10 +37,13 @@ app.use((req, res, next) => {
 });
 
 app.get('/api/users', (req, res) => {
-
   api.lifeworks.getUsers()
   .then((results) => {
     res.json(results);
   })
   .catch(console.error);
+});
+
+app.get('/api/conversation/:userName/with/:targetUserName', (req, res) => {
+  api.conversation.createOrFetchConversation(req, res, req.params.userName, req.params.targetUserName);
 });
