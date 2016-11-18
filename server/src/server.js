@@ -33,7 +33,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/api/lifeworks', (req, res) => {
+app.get('/api/users', (req, res) => {
 
   api.lifeworks.getUsers()
   .then((results) => {
