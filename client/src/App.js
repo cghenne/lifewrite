@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import './css/Normalize.scss';
 import './App.scss';
 
 import SubComponent from './components/subComponent';
