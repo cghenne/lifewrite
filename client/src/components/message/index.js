@@ -1,3 +1,3 @@
-import SubComponent from './SubComponent.js'
+import Message from './Message.js'
 
-export default SubComponent
+export default Message
