@@ -20,4 +20,8 @@ case "$mode" in
     "ssh" )
       docker run -it -v "$(pwd)":/data --link mongo:mongo -w /data -p 3000:3000 -p 4000:4000 node bash
       ;;
+    "destroy" )
+      docker stop $(docker ps -a -q)
+      docker rm $(docker ps -a -q)
+      ;;
 esac

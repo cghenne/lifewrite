@@ -24,7 +24,7 @@ class App extends Component {
 
 
 
-      fetch(`http://localhost:4000/api/test`)
+      fetch(`http://localhost:4000/api/lifeworks`)
           .then((results) => results.json())
           .then((results) => {
               this.setState({

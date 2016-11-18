@@ -52,7 +52,9 @@
     "lodash": "^4.15.0",
     "react": "^15.2.1",
     "react-dom": "^15.2.1",
-    "socket.io": "^1.5.1"
+    "socket.io": "^1.5.1",
+    "mongoose": "^4.5.3",
+    "mongoose-seed": "^0.1.5"
   },
   "scripts": {
     "client": "cd client && node ./scripts/start.js",

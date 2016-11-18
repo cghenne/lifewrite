@@ -1,3 +1,3 @@
 module.exports = {
-  test: require('./test')
+  lifeworks: require('./lifeworks')
 };
