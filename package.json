@@ -51,7 +51,8 @@
     "isomorphic-fetch": "^2.2.1",
     "lodash": "^4.15.0",
     "react": "^15.2.1",
-    "react-dom": "^15.2.1"
+    "react-dom": "^15.2.1",
+    "socket.io": "^1.5.1"
   },
   "scripts": {
     "client": "cd client && node ./scripts/start.js",

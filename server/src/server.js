@@ -1,34 +1,42 @@
 require('isomorphic-fetch');
-
 require('es6-promise').polyfill();
 
 const express = require('express');
 const app = express();
+const http = require('http').Server(app);
+const io = require('socket.io')(http);
+
 const api = require('./api/');
 const fs = require('fs');
 const Utils = require('./utils/Utils');
-
-app.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
-});
 
 app.get('/', (req, res) => {
     res.send('Hello World!');
 });
 
-app.get('/api/test', (req, res) => {
+io.on('connection', (socket) => {
+  console.log('a user connected');
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+  });
+});
 
-    api.test.test()
-    .then((results) => {
-        res.json(results);
-    })
-    .catch(console.error);
+http.listen(4000, () => {
+  console.log('listening on *:4000');
 });
 
 
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
-app.listen(4000, () => {
-    console.log('Node server listening on http://localhost:4000');
+app.get('/api/test', (req, res) => {
+
+  api.test.getTitle()
+  .then((results) => {
+    res.json(results);
+  })
+  .catch(console.error);
 });
