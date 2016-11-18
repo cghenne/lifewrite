@@ -21,4 +21,8 @@ router.route('/api/login').post((req, res) => {
   .catch(console.error);
 });
 
+router.route('/api/conversation/:userName/with/:targetUserName').get((req, res) => {
+  api.conversation.createOrFetchConversation(req, res, req.params.userName, req.params.targetUserName);
+});
+
 module.exports = router

@@ -25,8 +25,10 @@ class App extends Component {
     componentDidMount() {
       var io = require('socket.io-client'),
       socket = io.connect('http://localhost:4000');
-      // socket.on('connect', function () { console.log("socket connected"); });
+      // socket.on('connect', function () { console.log("socket connected"); })
       // socket.emit('private message', { user: 'me', msg: 'whazzzup?' });
+
+      // @todo add a check if the user is logged in and switch to login component if not
 
       fetch(`http://localhost:4000/api/users`)
           .then((results) => results.json())
