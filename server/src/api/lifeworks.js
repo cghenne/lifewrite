@@ -15,4 +15,14 @@ lifeworks.getUsers = () => {
   }).then(response => response.json());
 };
 
+lifeworks.login = req => {
+  return fetch('https://api.test.lifeworks.com/auth/mobile', {
+    method: 'POST',
+    headers: {
+      'Accept': 'application/vnd.wam-api-v1.3+json',
+    },
+    body: req,
+  }).then(response => response.json());
+}
+
 module.exports = lifeworks;
