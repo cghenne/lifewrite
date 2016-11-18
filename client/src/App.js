@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import './css/Normalize.scss';
 import './App.scss';
 
-import SubComponent from './components/subComponent';
+import SubComponent from './components/message';
 import UserList from './components/userList';
 import Header from './components/header';
 
