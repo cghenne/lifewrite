@@ -15,7 +15,16 @@ class App extends Component {
     }
 
     componentDidMount() {
-      fetch(`http://localhost:4000/api/test`)
+      var io = require('socket.io-client'),
+      socket = io.connect('lifewrite.dev', {
+        port: 4000
+      });
+      socket.on('connect', function () { console.log("socket connected"); });
+      socket.emit('private message', { user: 'me', msg: 'whazzzup?' });
+
+
+
+      fetch(`http://lifewrite.dev:4000/api/test`)
           .then((results) => results.json())
           .then((results) => {
               this.setState({
