@@ -21,6 +21,7 @@ io.on('connection', (socket) => {
   });
 });
 
+
 http.listen(4000, () => {
   console.log('listening on *:4000');
 });
@@ -32,9 +33,9 @@ app.use((req, res, next) => {
   next();
 });
 
-app.get('/api/test', (req, res) => {
+app.get('/api/lifeworks', (req, res) => {
 
-  api.test.getTitle()
+  api.lifeworks.getUsers()
   .then((results) => {
     res.json(results);
   })
