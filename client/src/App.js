@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import './css/Normalize.scss';
 import './App.scss';
+import { localGet, localSet } from './global/storage';
 
 import MessageForm from './components/messageForm';
 import MessageList from './components/messageList';
@@ -20,7 +21,8 @@ class App extends Component {
               text:'text 1'
             }
           ],
-          socket: null
+          socket: null,
+          currentUser: localGet('user'), // example on how to use it
         };
         this.handleMessageSubmit = this.handleMessageSubmit.bind(this);
     }
