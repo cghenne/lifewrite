@@ -19,18 +19,21 @@ class App extends Component {
               user:'user1',
               text:'text 1'
             }
-          ]
+          ],
+          socket: null
         };
+        this.handleMessageSubmit = this.handleMessageSubmit.bind(this);
     }
 
     componentDidMount() {
-      var io = require('socket.io-client'),
-      socket = io.connect('http://localhost:4000');
+      var io = require('socket.io-client');
       // socket.on('connect', function () { console.log("socket connected"); })
       // socket.emit('private message', { user: 'me', msg: 'whazzzup?' });
 
       // @todo add a check if the user is logged in and switch to login component if not
-
+      this.setState({
+        socket: io.connect('http://localhost:4000')
+      });
       fetch(`http://localhost:4000/api/users`)
           .then((results) => results.json())
           .then((results) => {
@@ -42,7 +45,7 @@ class App extends Component {
     }
 
     handleMessageSubmit(message) {
-        var {messages} = this.state;
+        var {messages, socket} = this.state;
         messages.push(message);
         this.setState({messages});
         socket.emit('send:message', message);
