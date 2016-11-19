@@ -1,11 +1,9 @@
-var Conversation = require('../documents/Conversation.js');
-
-var ConversationModel = {};
+const Conversation = require('../documents/Conversation.js');
+const ConversationModel = {};
 var entity;
 
 ConversationModel.findOneByUserIds = (targetUserIds) => {
   Conversation.findOne({'users' : {$in: targetUserIds}}).exec(function(err, document) {
-    console.log(document)
     entity = document;
   });
   return entity;
@@ -33,7 +31,6 @@ ConversationModel.create = (ownerId, name = "Default", topic = "", targetUserIds
     owner: ownerId
   });
   conversation.save(function (err) {console.log(err)});
-  console.log(conversation)
   return conversation;
 };
 

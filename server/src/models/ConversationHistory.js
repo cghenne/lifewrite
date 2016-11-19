@@ -1,15 +1,13 @@
-var mongoose = require('mongoose')
-var ObjectID = require('mongodb').ObjectID;
-var ConversationModel = require('../models/Conversation.js');
-var ConversationHistoryModel = require('../models/ConversationHistory.js');
-var ConversationHistory = require('../documents/ConversationHistory.js')
+const mongoose = require('mongoose')
+const ObjectID = require('mongodb').ObjectID;
+const ConversationModel = require('../models/Conversation.js');
+const ConversationHistory = require('../documents/ConversationHistory.js')
 var entity;
 
-var ConversationHistoryModel = {};
+const ConversationHistoryModel = {};
 
-
-ConversationHistoryModel.fetchOrCreate = (conversationId) => {
-	var history = ConversationHistoryModel.findById(conversationId);
+ConversationHistoryModel.fetchOrCreate = (conversationId, timestamp) => {
+	let history = ConversationHistoryModel.findByTimestamp(conversationId, timestamp);
 	if (!history) {
 		history = ConversationHistoryModel.create(conversationId);  
 	}
@@ -23,8 +21,8 @@ ConversationHistoryModel.findById = (conversationId) => {
 }
 
 ConversationHistoryModel.findByTimestamp = (conversationId, timestamp) => {
-	var dateStart = new Date(timestamp*1000);
-	var dateEnd = new Date(timestamp*1000);
+	let dateStart = new Date(timestamp*1000);
+	let dateEnd = new Date(timestamp*1000);
 	dateStart.setHours(0,0,0,0)
 	dateEnd.setHours(23,59,0,0)
 	ConversationHistory.findOne({
@@ -34,12 +32,11 @@ ConversationHistoryModel.findByTimestamp = (conversationId, timestamp) => {
 	.exec(function (err, document) {
 		entity = document
 	})
-	console.log(entity)
 	return entity;
 }
 
 ConversationHistoryModel.create = (conversationId) => {
-  var conversationHistory = new ConversationHistory({
+  let conversationHistory = new ConversationHistory({
     conversation: new mongoose.mongo.ObjectId(conversationId),
     history: []
   });
@@ -48,8 +45,8 @@ ConversationHistoryModel.create = (conversationId) => {
 }
 
 ConversationHistoryModel.addToHistory = (conversationId, timestamp, sender, message) => {
-	var conversationHistory = ConversationHistoryModel.findByTimestamp(conversationId, timestamp);
-	var historyLogEntity = {
+	let conversationHistory = ConversationHistoryModel.findByTimestamp(conversationId, timestamp);
+	let historyLogEntity = {
 		sender: sender,
 		message: message
 	}

@@ -33,12 +33,12 @@ router.route('/api/conversation/user/:userId').get((req, res) => {
   api.conversation.getConversationListForUser(req, res, req.params.userId)
 });
 
-router.route('/api/conversation/:conversationId/history').get((req, res) => {
-  api.history.getHistory(req, res, req.params.conversationId)
+router.route('/api/conversation/:conversationId/history/:timestamp').get((req, res) => {
+  api.history.getHistory(req, res, req.params.conversationId, req.params.timestamp)
 });
 
-router.route('/api/conversation/:conversationId/history').post((req, res) => {
-  api.history.addToHistory(req, res, req.params.conversationId)
+router.route('/api/conversation/:conversationId/history/:timestamp').post((req, res) => {
+  api.history.addToHistory(req, res, req.params.conversationId, req.params.timestamp)
 });
 
 module.exports = router
