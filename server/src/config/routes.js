@@ -25,4 +25,8 @@ router.route('/api/conversation').post((req, res) => {
   api.conversation.createOrFetchConversation(req, res)
 });
 
+router.route('/api/conversation/:conversationId').put((req, res) => {
+  api.conversation.updateConversation(req, res, req.params.conversationId)
+});
+
 module.exports = router

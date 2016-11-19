@@ -1,12 +1,42 @@
-var mongoose = require('mongoose');
+var Conversation = require('../models/Conversation.js');
 
-var ConversationSchema = mongoose.Schema({
-  name: String,
-  topic: String,
-  created_on: Date,
-  last_used: Date,
-  conversation_history: [{ type: mongoose.Schema.ObjectId, ref: 'ConversationHistory' }],
-  users : [String]
-});
+var ConversationModel = {};
+var entity;
 
-module.exports = mongoose.model('Conversation', ConversationSchema);
+ConversationModel.findOneByUserIds = (targetUserIds) => {
+  Conversation.findOne({'users' : {$in: targetUserIds}}).exec(function(err, document) {
+    entity = document;
+  });
+  return entity;
+};
+
+ConversationModel.create = (name = "Default", topic = "", targetUserIds) => {
+  var conversation = new Conversation({
+    name: name + 'Conversation',
+    topic: topic,
+    created_on: new Date(),
+    conversation_history: [],
+    users: targetUserIds
+  });
+  conversation.save();
+  return conversation;
+};
+
+ConversationModel.update = (conversationId, name, topic, targetUserIds) => {
+  var updatePrams = {};
+  if (name) {
+    updatePrams.name = name;
+  }
+  if (topic) {
+    updatePrams.topic = topic;
+  }
+  if (targetUserIds) {
+    updatePrams.users = targetUserIds;
+  }
+  Conversation.findOneByIdAndUpdate(conversationId, updatePrams, {new: false}).exec(function(err, document){
+    entity = document;
+  });
+  return entity;
+}
+
+module.exports = ConversationModel;

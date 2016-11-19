@@ -1,8 +1,7 @@
-var mongoose = require('mongoose');
+var Conversation = require('../models/Conversation.js');
+var ConversationHistory = require('../models/ConversationHistory.js');
+var historyEntity;
 
-var ConversationHistorySchema = mongoose.Schema({
-  created_on: Date,
-  history: [string]
-});
+var ConversationHistoryModel = {};
 
-module.exports = mongoose.model('ConversationHistory', ConversationHistorySchema);
+module.exports = ConversationHistoryModel;
