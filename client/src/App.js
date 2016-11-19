@@ -8,12 +8,14 @@ import MessageForm from './components/messageForm';
 import MessageList from './components/messageList';
 import UserList from './components/userList';
 import Header from './components/header';
+import LoginPage from './components/loginPage';
 
 class App extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
+          isLoggedIn: localGet('isLoggedIn'),
           myTitle: 'Wrong title',
           users: [],
           messages: [
@@ -28,6 +30,7 @@ class App extends Component {
         };
         this.handleMessageSubmit = this.handleMessageSubmit.bind(this);
         this.closeModal = this.closeModal.bind(this);
+        this.onSuccessLogin = this.onSuccessLogin.bind(this);
     }
 
     componentDidMount() {
@@ -39,14 +42,14 @@ class App extends Component {
       this.setState({
         socket: io.connect('http://localhost:4000')
       });
-      fetch(`http://localhost:4000/api/users`)
-          .then((results) => results.json())
-          .then((results) => {
-              this.setState({
-                  users: results.body,
-              });
-          })
-          .catch(console.error);
+      // fetch(`http://localhost:4000/api/users`)
+      //     .then((results) => results.json())
+      //     .then((results) => {
+      //         this.setState({
+      //             users: results.body,
+      //         });
+      //     })
+      //     .catch(console.error);
     }
 
     handleMessageSubmit(message) {
@@ -60,9 +63,20 @@ class App extends Component {
       this.setState({isModalOpen: false});
     }
 
-    render() {
+    onSuccessLogin(user) {
+      localSet('isLoggedIn', true);
+      localSet('user', user);
+      this.setState({
+        isLoggedIn: true,
+        currentUser: user,
+      })
+    }
 
+    render() {
         return (
+            !this.state.isLoggedIn ?
+            <LoginPage onSuccessLogin={this.onSuccessLogin} />
+            :
             <div>
               <Header />
               <UserList users={this.state.users}/>

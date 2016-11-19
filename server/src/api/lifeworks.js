@@ -49,13 +49,17 @@ lifeworks.login = req => {
   })
   .then(response => response.json())
   .then(jsonResponse => {
-    return {
-      lifeworks_token: jsonResponse.meta.user_token,
-      user: {
-        name: `${jsonResponse.meta.user.first_name} ${jsonResponse.meta.user.last_name}`,
-        user_id: jsonResponse.meta.user.user_id,
-      },
-    };
+    if (jsonResponse.meta) {
+      return {
+        lifeworks_token: jsonResponse.meta.user_token,
+        user: {
+          name: `${jsonResponse.meta.user.first_name} ${jsonResponse.meta.user.last_name}`,
+          user_id: jsonResponse.meta.user.user_id,
+        },
+      };
+    } else {
+      return jsonResponse;
+    }
   });
 }
 
