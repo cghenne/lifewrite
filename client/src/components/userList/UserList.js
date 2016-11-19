@@ -1,6 +1,5 @@
 import React from 'react';
 import Select from 'react-select';
-import 'react-select/dist/react-select';
 import './UserList.scss';
 
 var options = [
