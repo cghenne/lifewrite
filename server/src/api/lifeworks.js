@@ -16,13 +16,24 @@ lifeworks.getUsers = () => {
 };
 
 lifeworks.login = req => {
-  return fetch('https://api.test.lifeworks.com/auth/mobile', {
+  return fetch('https://shim.test.lifeworks.com/authenticate', {
     method: 'POST',
     headers: {
-      'Accept': 'application/vnd.wam-api-v1.3+json',
+      'Accept': 'application/json'
     },
-    body: req,
-  }).then(response => response.json());
+    body: JSON.stringify(req.body),
+  })
+  .then(response => response.json())
+  .then(jsonResponse => {
+    return {
+      lifeworks_token: jsonResponse.meta.user_token,
+      user: {
+        first_name: jsonResponse.meta.user.first_name,
+        last_name: jsonResponse.meta.user.last_name,
+        user_id: jsonResponse.meta.user.user_id,
+      },
+    };
+  });
 }
 
 module.exports = lifeworks;
