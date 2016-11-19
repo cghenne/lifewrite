@@ -57,6 +57,7 @@
     "mongoose-seed": "^0.1.5",
     "react": "^15.2.1",
     "react-dom": "^15.2.1",
+    "react-modal": "^1.5.2",
     "socket.io": "^1.5.1"
   },
   "scripts": {
