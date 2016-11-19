@@ -5,10 +5,7 @@ import './Header.scss';
 const Header = () => (
   <header>
       <div className="logo">
-        <img src={logo} alt="logo" />
-      </div>
-      <div className="App-name">
-        LifeWrite
+        <a href="#">LifeWrite</a>
       </div>
       <div className="status">
         <select>

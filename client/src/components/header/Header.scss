@@ -1,20 +1,16 @@
-@import "../../App";
-
 $headerHeight: 50px;
 $headerBackgroundColor: #222;
+$headerHoverBackgroundColor: #333;
+$headerColor: #efefef;
 
 header {
   height: $headerHeight;
   width: 100%;
   background: $headerBackgroundColor;
-  color: #efefef;
+  color: $headerColor;
   position: fixed;
   top: 0;
   z-index: 2;
-
-  img {
-    height: inherit;
-  }
 
   div {
     float: left;
@@ -23,7 +19,29 @@ header {
   }
 
   .logo {
-    margin-left: 20px;
+    margin-left: 15px;
+
+    a {
+      padding: 0 5px;
+      display: inline-block;
+      height: inherit;
+      color: $headerColor;
+      text-decoration: none;
+
+      &:hover {
+        background-color: $headerHoverBackgroundColor;
+      }
+
+      &::before {
+        background-image: url('../../images/Lifewrite.png');
+        background-size: $headerHeight;
+        display: inline-block;
+        width: $headerHeight;
+        height: $headerHeight;
+        content:"";
+        vertical-align: middle;
+      }
+    }
   }
 
   .status {
@@ -33,6 +51,7 @@ header {
     select {
       background-color: inherit;
       border: none;
+      cursor: pointer;
     }
   }
 }
