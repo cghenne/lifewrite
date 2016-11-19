@@ -29,4 +29,8 @@ router.route('/api/conversation/:conversationId').put((req, res) => {
   api.conversation.updateConversation(req, res, req.params.conversationId)
 });
 
+router.route('/api/conversation/:conversationId/history').post((req, res) => {
+  api.history.addToHistory(req, res, req.params.conversationId)
+});
+
 module.exports = router

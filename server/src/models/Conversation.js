@@ -10,13 +10,13 @@ ConversationModel.findOneByUserIds = (targetUserIds) => {
   return entity;
 };
 
-ConversationModel.create = (name = "Default", topic = "", targetUserIds) => {
+ConversationModel.create = (ownerId, name = "Default", topic = "", targetUserIds) => {
   var conversation = new Conversation({
     name: name + 'Conversation',
     topic: topic,
-    created_on: new Date(),
     conversation_history: [],
-    users: targetUserIds
+    users: targetUserIds,
+    owner: ownerId
   });
   conversation.save();
   return conversation;

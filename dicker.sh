@@ -12,6 +12,7 @@ case "$mode" in
       fi
       docker stop $(docker ps -a -q)
       docker rm $(docker ps -a -q)
+      rm -rf *.json.gzip
       docker pull mongo:latest
       docker run -v "$(pwd)":/data --name mongo -d mongo mongod --smallfiles
       docker pull node:latest
@@ -23,5 +24,6 @@ case "$mode" in
   "down" )
     docker stop $(docker ps -a -q)
     docker rm $(docker ps -a -q)
+    rm -rf *.json.gzip
     ;;
 esac
