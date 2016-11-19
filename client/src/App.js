@@ -1,7 +1,9 @@
 import React, {Component} from 'react';
 import './css/Normalize.scss';
 import './App.scss';
+import { localGet, localSet } from './global/storage';
 
+import MessageForm from './components/messageForm';
 import MessageList from './components/messageList';
 import UserList from './components/userList';
 import Header from './components/header';
@@ -18,18 +20,22 @@ class App extends Component {
               user:'user1',
               text:'text 1'
             }
-          ]
+          ],
+          socket: null,
+          currentUser: localGet('user'), // example on how to use it
         };
+        this.handleMessageSubmit = this.handleMessageSubmit.bind(this);
     }
 
     componentDidMount() {
-      var io = require('socket.io-client'),
-      socket = io.connect('http://localhost:4000');
+      var io = require('socket.io-client');
       // socket.on('connect', function () { console.log("socket connected"); })
       // socket.emit('private message', { user: 'me', msg: 'whazzzup?' });
 
       // @todo add a check if the user is logged in and switch to login component if not
-
+      this.setState({
+        socket: io.connect('http://localhost:4000')
+      });
       fetch(`http://localhost:4000/api/users`)
           .then((results) => results.json())
           .then((results) => {
@@ -40,6 +46,13 @@ class App extends Component {
           .catch(console.error);
     }
 
+    handleMessageSubmit(message) {
+        var {messages, socket} = this.state;
+        messages.push(message);
+        this.setState({messages});
+        socket.emit('send:message', message);
+    }
+
     render() {
 
         return (
@@ -48,6 +61,10 @@ class App extends Component {
               <UserList users={this.state.users}/>
               <div className="content-wrapper">
                  <MessageList messages={this.state.messages}/>
+                 <MessageForm
+                    onMessageSubmit={this.handleMessageSubmit}
+                    user={this.state.user}
+                />
               </div>
             </div>
         );
