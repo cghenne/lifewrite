@@ -6,7 +6,7 @@ const methodOverride = require('method-override');
 const api = require('../api/');
 
 router.route('/api/users').get((req, res) => {
-  api.lifeworks.getUsers()
+  api.lifeworks.getUsers(req)
   .then((results) => {
     res.json(results);
   })

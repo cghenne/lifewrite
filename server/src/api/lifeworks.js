@@ -5,12 +5,12 @@
 
 const lifeworks = {};
 
-lifeworks.getUsers = () => {
+lifeworks.getUsers = req => {
   return fetch('https://api.test.lifeworks.com/user', {
     method: 'GET',
      headers: {
        'Accept': 'application/vnd.wam-api-v1.3+json',
-       'Wam-Token': '9iuz86ee4d6bb552c1dca05b69a6a5cfac7b86ee4d6bb552c1dca05b69a6a5cfac7b'
+       'Wam-Token': JSON.stringify(req.body.token)
      }
   }).then(response => response.json());
 };
