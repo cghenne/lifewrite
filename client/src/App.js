@@ -4,6 +4,7 @@ import './css/Normalize.scss';
 import './App.scss';
 import { localGet, localSet } from './global/storage';
 const io = require('socket.io-client');
+import SplitPane from 'react-split-pane';
 
 import MessageForm from './components/messageForm';
 import MessageList from './components/messageList';
@@ -73,32 +74,36 @@ class App extends Component {
     }
 
     render() {
-        return (
-            !this.state.isLoggedIn ?
-            <LoginPage onSuccessLogin={this.onSuccessLogin} />
-            :
-            <div>
-              <Header />
-              <UserList users={this.state.users}/>
-              <div className="content-wrapper">
-                <MessageList messages={this.state.messages}/>
-                <MessageForm
-                  onMessageSubmit={this.handleMessageSubmit}
-                  user={this.state.user}
-                />
+      return (
+          !this.state.isLoggedIn ?
+          <LoginPage onSuccessLogin={this.onSuccessLogin} />
+          :
+          <div>
+            <SplitPane split="vertical" minSize={50} defaultSize={100}>
+              <div><Header /></div>
+              <div>
+                <UserList users={this.state.users}/>
+                <div className="content-wrapper">
+                  <MessageList messages={this.state.messages}/>
+                  <MessageForm
+                    onMessageSubmit={this.handleMessageSubmit}
+                    user={this.state.user}
+                  />
+                </div>
               </div>
-              <div onClick={() => this.setState({isModalOpen: true})}>Open Modal</div>
-              <Modal
-                isOpen={this.state.isModalOpen}
-                style={customStyles}
-                onRequestClose={this.closeModal}
-              >
-                <h1>Modal Content</h1>
-                <p>Etc.</p>
-                <button onClick={this.closeModal}>close</button>
-              </Modal>
-            </div>
-        );
+            </SplitPane>
+            <div onClick={() => this.setState({isModalOpen: true})}>Open Modal</div>
+            <Modal
+              isOpen={this.state.isModalOpen}
+              style={customStyles}
+              onRequestClose={this.closeModal}
+            >
+              <h1>Modal Content</h1>
+              <p>Etc.</p>
+              <button onClick={this.closeModal}>close</button>
+            </Modal>
+          </div>
+      );
     }
 }
 

@@ -12,8 +12,8 @@ var UserList = React.createClass({
                   return (
                     <li key={key}>
                       <a href="#" className="online">{user.name}</a>
-                              </li>
-                          );
+                    </li>
+                  );
                       })
                   }
               </ul>
