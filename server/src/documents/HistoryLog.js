@@ -2,7 +2,8 @@ var mongoose = require('mongoose');
 
 var HistoryLogSchema = mongoose.Schema({
 	date: {type: Date, default: Date.now},
-	message: String
+	message: String,
+	sender: String
 });
 
-module.exports HistoryLogSchema;
+module.exports = mongoose.model('HistoryLog', HistoryLogSchema);

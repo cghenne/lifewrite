@@ -7,6 +7,7 @@ conversation.createOrFetchConversation = (req, res) => {
     ConversationModel.create(req.body.owner, req.body.name, req.body.topic, req.body.target_list)
     conversation = ConversationModel.findOneByUserIds(req.body.target_list)
   }
+  console.log(conversation)
   res.status(200).send(conversation)
 }
 

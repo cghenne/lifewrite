@@ -5,10 +5,18 @@ var entity;
 
 ConversationModel.findOneByUserIds = (targetUserIds) => {
   Conversation.findOne({'users' : {$in: targetUserIds}}).exec(function(err, document) {
+    console.log(document)
     entity = document;
   });
   return entity;
 };
+
+ConversationModel.findOneById = (conversationId) => {
+  Conversation.findOneById(conversationId).exec(function(err, document){
+    entity = document;
+  })
+  return entity;
+}
 
 ConversationModel.findAllForUser = (userId) => {
   Conversation.find({'users' : userId}).exec(function(err, document) {
@@ -18,15 +26,14 @@ ConversationModel.findAllForUser = (userId) => {
 }
 
 ConversationModel.create = (ownerId, name = "Default", topic = "", targetUserIds) => {
-  console.log(ownerId)
   var conversation = new Conversation({
     name: name + 'Conversation',
     topic: topic,
-    conversation_history: [],
     users: targetUserIds,
     owner: ownerId
   });
-  conversation.save();
+  conversation.save(function (err) {console.log(err)});
+  console.log(conversation)
   return conversation;
 };
 
