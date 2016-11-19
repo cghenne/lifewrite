@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import Modal from 'react-modal';
 import './css/Normalize.scss';
 import './App.scss';
 import { localGet, localSet } from './global/storage';
@@ -23,8 +24,10 @@ class App extends Component {
           ],
           socket: null,
           currentUser: localGet('user'), // example on how to use it
+          isModalOpen: false,
         };
         this.handleMessageSubmit = this.handleMessageSubmit.bind(this);
+        this.closeModal = this.closeModal.bind(this);
     }
 
     componentDidMount() {
@@ -53,6 +56,10 @@ class App extends Component {
         socket.emit('send:message', message);
     }
 
+    closeModal() {
+      this.setState({isModalOpen: false});
+    }
+
     render() {
 
         return (
@@ -60,12 +67,22 @@ class App extends Component {
               <Header />
               <UserList users={this.state.users}/>
               <div className="content-wrapper">
-                 <MessageList messages={this.state.messages}/>
-                 <MessageForm
-                    onMessageSubmit={this.handleMessageSubmit}
-                    user={this.state.user}
+                <MessageList messages={this.state.messages}/>
+                <MessageForm
+                  onMessageSubmit={this.handleMessageSubmit}
+                  user={this.state.user}
                 />
               </div>
+              <div onClick={() => this.setState({isModalOpen: true})}>Open Modal</div>
+              <Modal
+                isOpen={this.state.isModalOpen}
+                style={customStyles}
+                onRequestClose={this.closeModal}
+              >
+                <h1>Modal Content</h1>
+                <p>Etc.</p>
+                <button onClick={this.closeModal}>close</button>
+              </Modal>
             </div>
         );
     }
@@ -76,3 +93,14 @@ App.propTypes = {
 };
 
 export default App;
+
+const customStyles = {
+  content : {
+    top                   : '50%',
+    left                  : '50%',
+    right                 : 'auto',
+    bottom                : 'auto',
+    marginRight           : '-50%',
+    transform             : 'translate(-50%, -50%)'
+  }
+};
