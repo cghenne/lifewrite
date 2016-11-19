@@ -1,16 +1,22 @@
 const history = {}
-var HistoryModel = require('../models/ConversationHistory.js')
+var ConversationHistoryModel = require('../models/ConversationHistory.js')
 
-history.getHistory = (req, res, conversationId) => {
-  var history = HistoryModel.findOne(conversationId, req.body.timestamp);
+history.getHistory = (req, res, conversationId, timestamp) => {
+  var history = ConversationHistoryModel.findById(conversationId);
+  console.log(history)
   if (!history) {
-    HistoryModel.create();
+    ConversationHistoryModel.create(conversationId);  
   }
   res.status(200).send(history)
 }
 
-history.addToHistory = (req, res) => {
-  var conversation = HistoryModel.create(conversationId, req.body.name, req.body.topic, req.body.target_list)
+history.getHistoryByTimestamp = (req, res, conversationId, timestamp) => {
+  var dateOn = new Date(timestamp*1000);
+  console.log(dateOn)
+}
+
+history.addToHistory = (req, res, conversationId, timestamp) => {
+  var conversation = ConversationHistoryModel.create();
   if (!conversation) {
     res.status(404).send('Conversation not found')
   }
