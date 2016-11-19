@@ -1,5 +1,16 @@
 import React from 'react';
+import Select from 'react-select';
+import 'react-select/dist/react-select';
 import './UserList.scss';
+
+var options = [
+    { value: 'one', label: 'One' },
+    { value: 'two', label: 'Two' }
+];
+
+function logChange(val) {
+    console.log("Selected: " + val);
+}
 
 var UserList = React.createClass({
   render() {
@@ -7,6 +18,14 @@ var UserList = React.createClass({
           <div className='users'>
               <h3> Online Users </h3>
               <ul>
+                <li>
+                  <Select
+                    name="form-field-name"
+                    value="one"
+                    options={options}
+                    onChange={logChange}
+                    />
+                </li>
                   {
                       this.props.users.map((user, key) => {
                           return (

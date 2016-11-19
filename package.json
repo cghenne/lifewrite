@@ -48,6 +48,7 @@
   "dependencies": {
     "body-parser": "^1.15.2",
     "cors": "^2.8.1",
+    "css-loader": "^0.23.1",
     "es6-promise": "^3.2.1",
     "express": "^4.14.0",
     "isomorphic-fetch": "^2.2.1",
@@ -57,7 +58,9 @@
     "mongoose-seed": "^0.1.5",
     "react": "^15.2.1",
     "react-dom": "^15.2.1",
-    "socket.io": "^1.5.1"
+    "react-select": "^1.0.0-rc.2",
+    "socket.io": "^1.5.1",
+    "style-loader": "^0.13.1"
   },
   "scripts": {
     "client": "cd client && node ./scripts/start.js",
