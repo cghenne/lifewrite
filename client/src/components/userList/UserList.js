@@ -10,8 +10,8 @@ var UserList = React.createClass({
                   {
                       this.props.users.map((user, key) => {
                           return (
-                              <li key={key} className="online">
-                                  {user.first_name} {user.last_name}
+                              <li key={key}>
+                                  <a href="#" className="online">{user.first_name} {user.last_name}</a>
                               </li>
                           );
                       })
