@@ -2,11 +2,7 @@ const history = {}
 var ConversationHistoryModel = require('../models/ConversationHistory.js')
 
 history.getHistory = (req, res, conversationId, timestamp) => {
-  var history = ConversationHistoryModel.findById(conversationId);
-  console.log(history)
-  if (!history) {
-    ConversationHistoryModel.create(conversationId);  
-  }
+  var history = ConversationHistoryModel.fetchOrCreate(conversationId, timestamp)
   res.status(200).send(history)
 }
 
@@ -15,11 +11,9 @@ history.getHistoryByTimestamp = (req, res, conversationId, timestamp) => {
   console.log(dateOn)
 }
 
-history.addToHistory = (req, res, conversationId, timestamp) => {
-  var conversation = ConversationHistoryModel.create();
-  if (!conversation) {
-    res.status(404).send('Conversation not found')
-  }
+history.addToHistory = (req, res, conversationId) => {
+  ConversationHistoryModel.addToHistory(conversationId, req.body.timestamp, req.body.sender, req.body.message);
+  history.getHistory(req, res, conversationId, timestamp);
   res.status(200).send(conversation)
 }
 
