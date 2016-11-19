@@ -29,6 +29,10 @@ router.route('/api/conversation/:conversationId').put((req, res) => {
   api.conversation.updateConversation(req, res, req.params.conversationId)
 });
 
+router.route('/api/conversation/user/:userId').get((req, res) => {
+  api.conversation.getConversationListForUser(req, res, req.params.userId)
+});
+
 router.route('/api/conversation/:conversationId/history').post((req, res) => {
   api.history.addToHistory(req, res, req.params.conversationId)
 });

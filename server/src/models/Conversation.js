@@ -1,4 +1,4 @@
-var Conversation = require('../models/Conversation.js');
+var Conversation = require('../documents/Conversation.js');
 
 var ConversationModel = {};
 var entity;
@@ -10,7 +10,15 @@ ConversationModel.findOneByUserIds = (targetUserIds) => {
   return entity;
 };
 
+ConversationModel.findAllForUser = (userId) => {
+  Conversation.find({'users' : userId}).exec(function(err, document) {
+    entity = document;
+  });
+  return entity;
+}
+
 ConversationModel.create = (ownerId, name = "Default", topic = "", targetUserIds) => {
+  console.log(ownerId)
   var conversation = new Conversation({
     name: name + 'Conversation',
     topic: topic,

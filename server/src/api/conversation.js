@@ -10,6 +10,11 @@ conversation.createOrFetchConversation = (req, res) => {
   res.status(200).send(conversation)
 }
 
+conversation.getConversationListForUser = (req, res, userId) => {
+    var conversationList = ConversationModel.findAllForUser(userId);
+    res.status(200).send(conversationList)
+}
+
 conversation.updateConversation = (req, res, conversationId) => {
   var conversation = ConversationModel.update(conversationId, req.body.name, req.body.topic, req.body.target_list)
   if (!conversation) {
