@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import './css/Normalize.scss';
 import './App.scss';
 
+import MessageForm from './components/messageForm';
 import MessageList from './components/messageList';
 import UserList from './components/userList';
 import Header from './components/header';
@@ -38,6 +39,13 @@ class App extends Component {
           .catch(console.error);
     }
 
+    handleMessageSubmit(message) {
+        var {messages} = this.state;
+        messages.push(message);
+        this.setState({messages});
+        socket.emit('send:message', message);
+    }
+
     render() {
 
         return (
@@ -46,6 +54,10 @@ class App extends Component {
               <UserList users={this.state.users}/>
               <div className="content-wrapper">
                  <MessageList messages={this.state.messages}/>
+                 <MessageForm
+                    onMessageSubmit={this.handleMessageSubmit}
+                    user={this.state.user}
+                />
               </div>
             </div>
         );
