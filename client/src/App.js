@@ -3,6 +3,7 @@ import Modal from 'react-modal';
 import './css/Normalize.scss';
 import './App.scss';
 import { localGet, localSet } from './global/storage';
+const io = require('socket.io-client');
 
 import MessageForm from './components/messageForm';
 import MessageList from './components/messageList';
@@ -24,32 +25,20 @@ class App extends Component {
               text:'text 1'
             }
           ],
-          socket: null,
+          socket: io.connect('http://localhost:4000'),
           currentUser: localGet('user'), // example on how to use it
           isModalOpen: false,
         };
         this.handleMessageSubmit = this.handleMessageSubmit.bind(this);
         this.closeModal = this.closeModal.bind(this);
         this.onSuccessLogin = this.onSuccessLogin.bind(this);
+        this.getListOfUsers = this.getListOfUsers.bind(this);
     }
 
     componentDidMount() {
-      var io = require('socket.io-client');
-      // socket.on('connect', function () { console.log("socket connected"); })
-      // socket.emit('private message', { user: 'me', msg: 'whazzzup?' });
-
-      // @todo add a check if the user is logged in and switch to login component if not
-      this.setState({
-        socket: io.connect('http://localhost:4000')
-      });
-      // fetch(`http://localhost:4000/api/users`)
-      //     .then((results) => results.json())
-      //     .then((results) => {
-      //         this.setState({
-      //             users: results.body,
-      //         });
-      //     })
-      //     .catch(console.error);
+      if (this.state.isLoggedIn) {
+        this.getListOfUsers();
+      }
     }
 
     handleMessageSubmit(message) {
@@ -69,7 +58,18 @@ class App extends Component {
       this.setState({
         isLoggedIn: true,
         currentUser: user,
-      })
+      }, this.getListOfUsers);
+    }
+
+    getListOfUsers() {
+      fetch(`http://localhost:4000/api/users?token=${this.state.currentUser.lifeworks_token}`)
+        .then((results) => results.json())
+        .then((results) => {
+          this.setState({
+            users: results,
+          });
+        })
+        .catch(console.error);
     }
 
     render() {
