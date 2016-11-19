@@ -1,14 +1,20 @@
-const conversation = {};
-var Conversation = require('../models/Conversation.js');
-var ConversationRepository = require('../repositories/Conversation.js');
+const conversation = {}
+var ConversationRepository = require('../repositories/Conversation.js')
 
-conversation.createOrFetchConversation = (req, res, userName, targetUserName) => {
-  var conversation = ConversationRepository.findOneByUserIds(userName, targetUserName);
+conversation.createOrFetchConversation = (req, res) => {
+  var conversation = ConversationRepository.findOneByUserIds(req.body.target_list)
   if (!conversation) {
-    ConversationRepository.create(undefined, userName, targetUserName);
-    conversation = ConversationRepository.findOneByUserIds(userName, targetUserName);
+    ConversationRepository.create(undefined, req.body.target_list)
+    conversation = ConversationRepository.findOneByUserIds(req.body.target_list)
   }
-  res.status(200).send(conversation);
-};
+  res.status(200).send(conversation)
+}
 
-module.exports = conversation;
+conversation.updateConversation = (req, res) => {
+  var conversation = ConversationRepository.findOneByUserIds(req.body.target_list)
+  if (!conversation) {
+    res.status(404).send('Conversation not found')
+  }
+}
+
+module.exports = conversation
