@@ -3,17 +3,21 @@ import Modal from 'react-modal';
 import './css/Normalize.scss';
 import './App.scss';
 import { localGet, localSet } from './global/storage';
+const io = require('socket.io-client');
+import SplitPane from 'react-split-pane';
 
 import MessageForm from './components/messageForm';
 import MessageList from './components/messageList';
 import UserList from './components/userList';
 import Header from './components/header';
+import LoginPage from './components/loginPage';
 
 class App extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
+          isLoggedIn: localGet('isLoggedIn'),
           myTitle: 'Wrong title',
           users: [],
           messages: [
@@ -22,31 +26,20 @@ class App extends Component {
               text:'text 1'
             }
           ],
-          socket: null,
+          socket: io.connect('http://localhost:4000'),
           currentUser: localGet('user'), // example on how to use it
           isModalOpen: false,
         };
         this.handleMessageSubmit = this.handleMessageSubmit.bind(this);
         this.closeModal = this.closeModal.bind(this);
+        this.onSuccessLogin = this.onSuccessLogin.bind(this);
+        this.getListOfUsers = this.getListOfUsers.bind(this);
     }
 
     componentDidMount() {
-      var io = require('socket.io-client');
-      // socket.on('connect', function () { console.log("socket connected"); })
-      // socket.emit('private message', { user: 'me', msg: 'whazzzup?' });
-
-      // @todo add a check if the user is logged in and switch to login component if not
-      this.setState({
-        socket: io.connect('http://localhost:4000')
-      });
-      fetch(`http://localhost:4000/api/users`)
-          .then((results) => results.json())
-          .then((results) => {
-              this.setState({
-                  users: results.body,
-              });
-          })
-          .catch(console.error);
+      if (this.state.isLoggedIn) {
+        this.getListOfUsers();
+      }
     }
 
     handleMessageSubmit(message) {
@@ -60,31 +53,57 @@ class App extends Component {
       this.setState({isModalOpen: false});
     }
 
-    render() {
+    onSuccessLogin(user) {
+      localSet('isLoggedIn', true);
+      localSet('user', user);
+      this.setState({
+        isLoggedIn: true,
+        currentUser: user,
+      }, this.getListOfUsers);
+    }
 
-        return (
-            <div>
-              <Header />
-              <UserList users={this.state.users}/>
-              <div className="content-wrapper">
-                <MessageList messages={this.state.messages}/>
-                <MessageForm
-                  onMessageSubmit={this.handleMessageSubmit}
-                  user={this.state.user}
-                />
+    getListOfUsers() {
+      fetch(`http://localhost:4000/api/users?token=${this.state.currentUser.lifeworks_token}`)
+        .then((results) => results.json())
+        .then((results) => {
+          this.setState({
+            users: results,
+          });
+        })
+        .catch(console.error);
+    }
+
+    render() {
+      return (
+          !this.state.isLoggedIn ?
+          <LoginPage onSuccessLogin={this.onSuccessLogin} />
+          :
+          <div>
+            <SplitPane split="vertical" minSize={50} defaultSize={100}>
+              <div><Header /></div>
+              <div>
+                <UserList users={this.state.users}/>
+                <div className="content-wrapper">
+                  <MessageList messages={this.state.messages}/>
+                  <MessageForm
+                    onMessageSubmit={this.handleMessageSubmit}
+                    user={this.state.user}
+                  />
+                </div>
               </div>
-              <div onClick={() => this.setState({isModalOpen: true})}>Open Modal</div>
-              <Modal
-                isOpen={this.state.isModalOpen}
-                style={customStyles}
-                onRequestClose={this.closeModal}
-              >
-                <h1>Modal Content</h1>
-                <p>Etc.</p>
-                <button onClick={this.closeModal}>close</button>
-              </Modal>
-            </div>
-        );
+            </SplitPane>
+            <div onClick={() => this.setState({isModalOpen: true})}>Open Modal</div>
+            <Modal
+              isOpen={this.state.isModalOpen}
+              style={customStyles}
+              onRequestClose={this.closeModal}
+            >
+              <h1>Modal Content</h1>
+              <p>Etc.</p>
+              <button onClick={this.closeModal}>close</button>
+            </Modal>
+          </div>
+      );
     }
 }
 
