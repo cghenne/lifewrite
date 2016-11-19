@@ -17,11 +17,11 @@ case "$mode" in
       docker pull node:latest
       docker run --name node -v "$(pwd)":/data --link mongo:mongo -w /data -p 8082:8082 node bash
       ;;
-    "ssh" )
-      docker run -it -v "$(pwd)":/data --link mongo:mongo -w /data -p 3000:3000 -p 4000:4000 node bash
-      ;;
-    "destroy" )
-      docker stop $(docker ps -a -q)
-      docker rm $(docker ps -a -q)
-      ;;
+  "ssh" )
+    docker run -it -v "$(pwd)":/data --link mongo:mongo -w /data -p 3000:3000 -p 4000:4000 node bash
+    ;;
+  "down" )
+    docker stop $(docker ps -a -q)
+    docker rm $(docker ps -a -q)
+    ;;
 esac
