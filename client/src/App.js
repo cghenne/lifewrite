@@ -61,10 +61,10 @@ class App extends Component {
           .then(results => results.json())
           .then(res => {
             console.log(res);
-            // this.setState({
-            //   currentConversation,
-            //   messages: res.body,
-            // });
+            this.setState({
+              currentConversation,
+              messages: res.history,
+            });
           });
         });
       });
@@ -80,7 +80,10 @@ class App extends Component {
         };
         messages.push(newMessage);
         this.setState({messages});
-        socket.emit('send:message', newMessage);
+        socket.emit('send:message', {
+          message: newMessage,
+          conversationId: this.state.currentConversation.conversationId,
+        });
     }
 
     closeModal() {
