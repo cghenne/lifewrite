@@ -2,7 +2,7 @@ import React from 'react';
 import cloudinary from '../../global/cloudinary';
 import './UserList.scss';
 
-var UserList = React.createClass({
+const UserList = React.createClass({
   render() {
     const spinner = (
       <div className="spinner blue" style={{marginTop: 'calc(50% - 20px)'}}>
@@ -19,12 +19,12 @@ var UserList = React.createClass({
           <h3> Online Users </h3>
           {this.props.isFetching ? spinner :
             <ul>
-              {
+              {this.props.users &&
                 this.props.users.map((user, key) => {
-                  var image = cloudinary(user.image_profile, 'h_30,w_30,c_fill');
+                  const image = cloudinary(user.image_profile, 'h_30,w_30,c_fill');
                   return (
                     <li key={key}>
-                      <a href="#" className="online">
+                      <a key={key} onClick={() => this.props.onUserClicked(user)} className="online">
                         <img src={image} className="avatar"/> {user.name}
                       </a>
                     </li>
@@ -37,5 +37,11 @@ var UserList = React.createClass({
       );
     }
 });
+
+UserList.displayName = "UserList";
+UserList.propTypes = {
+  onUserClicked: React.PropTypes.func,
+};
+
 
 export default UserList;

@@ -2,11 +2,7 @@ const conversation = {}
 const ConversationModel = require('../models/Conversation.js')
 
 conversation.createOrFetchConversation = (req, res) => {
-  let conversation = ConversationModel.findOneByUserIds(req.body.target_list)
-  if (!conversation) {
-    ConversationModel.create(req.body.owner, req.body.name, req.body.topic, req.body.target_list)
-    conversation = ConversationModel.findOneByUserIds(req.body.target_list)
-  }
+  let conversation = ConversationModel.fetchOrCreate(req.body.target_list);
   res.status(200).send(conversation)
 }
 

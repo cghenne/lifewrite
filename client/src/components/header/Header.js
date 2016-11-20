@@ -1,19 +1,30 @@
 import React from 'react';
 import './Header.scss';
 
-const Header = () => (
-  <header>
+const Header = props => {
+  const logoutStyle = {
+    width: 50,
+    height: 33,
+    position: 'absolute',
+    right: 0,
+    paddingTop: 2,
+  };
+
+  return (
+    <header>
       <div className="logo">
-        <a href="javascript:;">LifeWrite</a>
+        <a href="#">LifeWrite</a>
       </div>
-      <div className="status">
-        <select>
-          <option value="online">Online</option>
-          <option value="offline">Offline</option>
-          <option value="away">Away</option>
-        </select>
+      <div className="button" onClick={() => props.onLogout()} style={logoutStyle}>
+        Logout
       </div>
-  </header>
-);
+    </header>
+  );
+}
+
+Header.displayname = "Header";
+Header.propTypes = {
+  onLogout: React.PropTypes.func,
+};
 
 export default Header;
