@@ -10,10 +10,10 @@ var UserList = React.createClass({
             <ul>
               {
                 this.props.users.map((user, key) => {
-                  var image = cloudinary(user.image_profile, 'h_40,w_40,c_fill');
+                  var image = cloudinary(user.image_profile, 'h_30,w_30,c_fill');
                   return (
                     <li key={key}>
-                      <img src={image} />
+                      <img src={image} className="avatar"/>
                       <a href="#" className="online">{user.name}</a>
                     </li>
                   );
