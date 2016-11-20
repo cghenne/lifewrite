@@ -26,6 +26,7 @@ class App extends Component {
           socket: io.connect('http://localhost:4000'),
           currentUser: localGet('user'),
           isModalOpen: false,
+          conversations: [],
         };
         this.handleMessageSubmit = this.handleMessageSubmit.bind(this);
         this.closeModal = this.closeModal.bind(this);
@@ -40,6 +41,21 @@ class App extends Component {
         this.state.socket.emit('login', {userId: this.state.currentUser.user.user_id});
         this.getListOfUsers();
       }
+
+      this.state.socket.on('connect', () => {
+        console.log('connect');
+        this.state.socket.on('receive:message', data => {
+          console.log(data);
+        });
+
+        this.state.socket.on('receive:joinedConversation', data => {
+          console.log(data);
+        });
+
+      });
+
+
+
     }
 
     handleMessageSubmit(message) {
