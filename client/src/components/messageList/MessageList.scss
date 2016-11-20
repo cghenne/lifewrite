@@ -1,3 +1,19 @@
-.blue {
-  color: blue;
+.messages {
+  background: white;
+  padding: 10px;
+  height: calc(100% - 90px);
+
+  h1 {
+    font-size: 20px;
+    margin-top: 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #0091DE;
+    color: darken(#0091DE, 50);
+  }
+
+  .messageContainer {
+    overflow-y: scroll;
+    height: calc(100% - 50px);
+  }
+
 }

@@ -1,39 +1,48 @@
-import React from 'react';
+import React, {Component} from 'react';
 import './MessageForm.scss';
 
-var MessageForm = React.createClass({
-
-  getInitialState() {
-      return {text: ''};
-  },
+class MessageForm extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      text: ''
+    };
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.changeHandler = this.changeHandler.bind(this);
+  }
 
   handleSubmit(e) {
-      e.preventDefault();
-      var message = {
-          user : this.props.user,
-          text : this.state.text
-      }
-      this.props.onMessageSubmit(message);
-      this.setState({ text: '' });
-  },
+    e.preventDefault();
+    this.props.onMessageSubmit(this.state.text);
+    this.setState({ text: '' });
+  }
 
   changeHandler(e) {
-      this.setState({ text : e.target.value });
-  },
+    this.setState({ text : e.target.value });
+  }
 
   render() {
-      return(
-          <div className='message_form'>
-              <h3>Write New Message</h3>
-              <form onSubmit={this.handleSubmit}>
-                  <input
-                      onChange={this.changeHandler}
-                      value={this.state.text}
-                  />
-              </form>
-          </div>
-      );
+    return(
+      <div className='messageForm'>
+        <form onSubmit={this.handleSubmit}>
+          <input
+            type='text'
+            placeholder='Write your message here...'
+            onChange={this.changeHandler}
+            value={this.state.text}
+          />
+          <div className='button' onClick={this.handleSubmit}>Submit</div>
+        </form>
+      </div>
+    );
   }
-});
+}
+
+MessageForm.displayName = "MessageForm";
+MessageForm.propTypes = {
+  onMessageSubmit: React.PropTypes.func,
+  user: React.PropTypes.object,
+};
+
 
 export default MessageForm;
