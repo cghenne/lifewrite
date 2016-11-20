@@ -12,12 +12,9 @@ const setupIO = connectedIo => {
 
   io.on('connection', connectedSocket => {
     connectedSocket.on('login', function (data) {
-      console.log(data)
       connectedSocket.userId = data.userId;
       onlineUsers[connectedSocket.userId] = connectedSocket
-      console.log("update list")
       io.sockets.emit('update:userlist', {users: _.keys(onlineUsers)})
-      console.log('emitted update after login')
     })
 
     connectedSocket.on('join:conversation', function (data) {
@@ -33,15 +30,16 @@ const setupIO = connectedIo => {
       } else {
         let conversation = ConversationModel.fetchOrCreate(connectedSocket.userId, data.targetList);
       }
-      console.log(onlineUsers)
+      
       connectedSocket.join(data.conversationId)
     });
 
     connectedSocket.on('send:message', function (data) {
       console.log('got message')
+      console.log(data)
       connectedSocket.broadcast.to(data.conversationId).emit(
         'receive:message',
-        {conversationId: data.conversationId, sender: connectedSocket.userId, message: data.message.text}
+        {conversationId: data.conversationId, sender: connectedSocket.userId, message: data.message}
       )
     });
 
