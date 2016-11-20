@@ -15,12 +15,14 @@ const setupIO = connectedIo => {
       console.log(data)
       connectedSocket.userId = data.userId;
       onlineUsers[connectedSocket.userId] = connectedSocket
-      console.log(onlineUsers)
-      io.emit('update:userlist', onlineUsers)
+      console.log("update list")
+      io.sockets.emit('update:userlist', {users: _.keys(onlineUsers)})
+      console.log('emitted update after login')
     })
 
     connectedSocket.on('join:conversation', function (data) {
       console.log('got join conversation')
+      console.log(data)
       const conversationId = data.conversationId
       if (conversationId) {
         let conversation = ConversationModel.findOneById(conversationId);
