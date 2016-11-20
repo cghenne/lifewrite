@@ -41,9 +41,9 @@ class App extends Component {
     }
 
     handleMessageSubmit(message) {
-        const {messages, socket, conversationWith} = this.state;
+        const {messages, socket, currentUser} = this.state;
         messages.push({
-          sender: conversationWith.id,
+          sender: currentUser.user.user_id,
           date: Date.now(),
           message: message,
         });
