@@ -22,8 +22,8 @@ class UserList extends Component {
     this.changeHandler = this.changeHandler.bind(this);
   }
 
-  changeHandler() {
-
+  changeHandler(e) {
+    this.setState({ filter : e.target.value });
   }
 
   render() {
@@ -39,12 +39,18 @@ class UserList extends Component {
 
     return (
       <div className='users'>
-        <h3>Online Users</h3>
+        <h3>{this.state.filter !== '' ? `Filter for: ${this.state.filter}` : 'Online Users'}</h3>
         {this.props.isFetching ? spinner :
-
           <ul>
-            {this.props.users &&
-              this.props.users.map((user, key) => {
+            <input
+              type='text'
+              placeholder='Enter name'
+              onChange={this.changeHandler}
+              value={this.state.filter}
+            />
+            {this.props.users && this.props.users.map((user, key) => {
+              // if filter, look for match
+              if (this.state.filter !== '' && user.name.toUpperCase().indexOf(this.state.filter.toUpperCase()) > -1){
                 const image = cloudinary(user.image_profile, 'h_30,w_30,c_fill');
                 return (
                   <li className={isOnline(user, this.props.onlineUsers) ? 'online' : 'offline'} key={key} onClick={() => this.props.onUserClicked(user)}>
@@ -55,7 +61,20 @@ class UserList extends Component {
                     </div>
                   </li>
                 );
-              })
+                // not filter, only connected
+              } else if (this.state.filter === '' && isOnline(user, this.props.onlineUsers)) {
+                const image = cloudinary(user.image_profile, 'h_30,w_30,c_fill');
+                return (
+                  <li className={isOnline(user, this.props.onlineUsers) ? 'online' : 'offline'} key={key} onClick={() => this.props.onUserClicked(user)}>
+                    <div>
+                      <img src={image} className="avatar"/>
+                      <div className="user-status" />
+                      {user.name}
+                    </div>
+                  </li>
+                );
+              }
+            })
             }
           </ul>
         }
