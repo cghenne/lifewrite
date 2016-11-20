@@ -10,6 +10,7 @@ ConversationModel.findOneByUserIds = (targetUserIds) => {
 };
 
 ConversationModel.fetchOrCreate = (owner, targetUserIds) => {
+  targetUserIds.push(owner)
   var conversation = ConversationModel.findOneByUserIds(targetUserIds)
   if (!conversation) {
     ConversationModel.create(owner, targetUserIds)

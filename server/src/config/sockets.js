@@ -18,20 +18,24 @@ const setupIO = connectedIo => {
     })
 
     connectedSocket.on('join:conversation', function (data) {
-      console.log('got join conversation')
-      console.log(data)
+      let conversation;
       const conversationId = data.conversationId
       if (conversationId) {
         let conversation = ConversationModel.findOneById(conversationId);
-        if (!conversation) {
-          connectedSocket.emit('notfound:conversation')
-          return;
-        }
       } else {
-        let conversation = ConversationModel.fetchOrCreate(connectedSocket.userId, data.targetList);
+        conversation = ConversationModel.fetchOrCreate(connectedSocket.userId, data.targetList);
       }
-      
-      connectedSocket.join(data.conversationId)
+      if (!conversation) {
+        connectedSocket.emit('notfound:conversation')
+        return;
+      }
+      conversation.users.map((userId) => {
+        if (onlineUsers[userId]) {
+          let userSocket = onlineUsers[userId];
+          userSocket.join(data.conversationId)
+          userSocket.emit('receive:joinedConversation', {conversationId: conversation._id})
+        }
+      });
     });
 
     connectedSocket.on('send:message', function (data) {
