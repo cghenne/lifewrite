@@ -127,7 +127,7 @@ class App extends Component {
                 <SplitPane split="vertical" defaultSize={200} primary="second">
                   <div style={{height: '100%', backgroundColor: 'white'}}>
                     {this.state.currentConversation ?
-                      <div>
+                      <div style={{height: '100%'}}>
                         <MessageList
                           messages={this.state.messages}
                           conversationName={this.state.currentConversation.name}
