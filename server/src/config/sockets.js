@@ -1,4 +1,5 @@
 const ConversationModel = require('../models/Conversation.js')
+const HistoryModel = require('../models/ConversationHistory.js')
 const _ = require('lodash');
 
 let io = null;
@@ -20,30 +21,26 @@ const setupIO = connectedIo => {
     })
 
     connectedSocket.on('join:conversation', function (data) {
-      let conversation;
+      let conversation; 
       const conversationId = data.conversationId
       if (conversationId) {
-        conversation = ConversationModel.findOneById(conversationId);
+        console.log('Starting find by conversation id')
+        conversation = ConversationModel.findOneById(conversationId, sendInvites);
       } else {
-        console.log('creating new conversation with owner:')
-        console.log(connectedSocket.userId)
-        conversation = ConversationModel.fetchOrCreate(connectedSocket.userId, data.targetList);      }
-      if (!conversation) {
-        connectedSocket.emit('notfound:conversation')
-        return;
+        console.log('Starting find by target')
+        conversation = ConversationModel.fetchOrCreate(connectedSocket.userId, data.targetList, sendInvites);
       }
-      console.log('conversation found')
-      console.log(conversation)
-      console.log('--end --')
+    });
+
+    const sendInvites = (conversation) => {
       conversation.users.map((userId) => {
         if (onlineUsers[userId]) {
           let userSocket = onlineUsers[userId];
-          userSocket.join(data.conversationId)
+          userSocket.join(conversation._id)
           userSocket.emit('receive:joinedConversation', {conversationId: conversation._id})
-          console.log(userSocket.userId)
         }
       });
-    });
+    }
 
     connectedSocket.on('send:message', function (data) {
       console.log('got message')
@@ -52,6 +49,7 @@ const setupIO = connectedIo => {
         'receive:message',
         {conversationId: data.conversationId, sender: connectedSocket.userId, message: data.message}
       )
+      HistoryModel.addToHistory(data.conversationId, new Date().getTime(), connectedSocket.userId, data.message)
     });
 
     connectedSocket.on('logout', () => {

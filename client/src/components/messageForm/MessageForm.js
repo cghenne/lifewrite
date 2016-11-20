@@ -43,7 +43,6 @@ class MessageForm extends Component {
 MessageForm.displayName = "MessageForm";
 MessageForm.propTypes = {
   onMessageSubmit: React.PropTypes.func,
-  user: React.PropTypes.object,
 };
 
 

@@ -1,27 +1,26 @@
 const Conversation = require('../documents/Conversation.js');
 const ConversationModel = {};
-var entity;
 
-ConversationModel.findOneByUserIds = (targetUserIds) => {
-  Conversation.findOne({'users' : {$eq: targetUserIds}}).exec(function(err, document) {
-    entity = document;
+ConversationModel.findOneByUserIds = (targetUserIds, sendInvites, owner) => {
+  Conversation.findOne({'users' : {"$all": targetUserIds}}).exec(function(err, document) {
+    console.log('conversation from find')
+    console.log(document._id)
+    if (document) {
+          sendInvites(document)
+    } else {
+          ConversationModel.create(owner, targetUserIds, null, null, sendInvites)
+    }
+    return;
   });
-  return entity;
 };
 
-ConversationModel.fetchOrCreate = (owner, targetUserIds) => {
-  console.log(owner)
-  console.log('and users')
+ConversationModel.fetchOrCreate = (owner, targetUserIds, sendInvites) => {
   targetUserIds.push(owner)
-  console.log(targetUserIds)
-  var conversation = ConversationModel.findOneByUserIds(targetUserIds)
-  if (!conversation) {
-    conversation = ConversationModel.create(owner, targetUserIds)
-  }
-  return conversation;
+  ConversationModel.findOneByUserIds(targetUserIds, sendInvites, owner)
 }
 
 ConversationModel.findOneById = (conversationId) => {
+  var entity = null;
   Conversation.findById(conversationId).exec(function(err, document){
     entity = document;
   })
@@ -29,24 +28,28 @@ ConversationModel.findOneById = (conversationId) => {
 }
 
 ConversationModel.findAllForUser = (userId) => {
+  var entity = null;
   Conversation.find({'users' : userId}).exec(function(err, document) {
     entity = document;
   });
   return entity;
 }
 
-ConversationModel.create = (ownerId, targetUserIds, name = "Default", topic = "") => {
+ConversationModel.create = (ownerId, targetUserIds, name = "Default", topic = "", sendInvites) => {
   var conversation = new Conversation({
     name: name + 'Conversation',
     topic: topic,
     users: targetUserIds,
     owner: ownerId
   });
+  console.log('conversation from create')
   conversation.save(function (err) {console.log(err)});
+  sendInvites(conversation)
   return conversation;
 };
 
 ConversationModel.update = (conversationId, name, topic, targetUserIds) => {
+  var entity = null;
   var updatePrams = {};
   if (name) {
     updatePrams.name = name;

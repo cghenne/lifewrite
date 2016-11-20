@@ -2,6 +2,17 @@ import React from 'react';
 import cloudinary from '../../global/cloudinary';
 import './UserList.scss';
 
+const isOnline = (user, onlineUsers) => {
+  let userIsOnline = false;
+  onlineUsers.map(id => {
+    if (id === user.user_id) {
+      userIsOnline = true;
+    }
+  });
+
+  return userIsOnline;
+}
+
 const UserList = React.createClass({
   render() {
     const spinner = (
@@ -23,7 +34,7 @@ const UserList = React.createClass({
                 this.props.users.map((user, key) => {
                   const image = cloudinary(user.image_profile, 'h_30,w_30,c_fill');
                   return (
-                    <li className="online" key={key} onClick={() => this.props.onUserClicked(user)}>
+                    <li className={isOnline(user, this.props.onlineUsers) ? 'online' : 'offline'} key={key} onClick={() => this.props.onUserClicked(user)}>
                       <div>
                         <img src={image} className="avatar"/>
                         <div className="user-status" />
@@ -43,6 +54,9 @@ const UserList = React.createClass({
 UserList.displayName = "UserList";
 UserList.propTypes = {
   onUserClicked: React.PropTypes.func,
+  users: React.PropTypes.array,
+  isFetching: React.PropTypes.bool,
+  onlineUsers: React.PropTypes.array,
 };
 
 

@@ -21,7 +21,7 @@ class App extends Component {
         this.state = {
           isLoggedIn: localGet('isLoggedIn'),
           users: null,
-          fetchingUser: false,
+          fetchingUsers: false,
           fetchingConversations: false,
           messages: localGet('currentConversation') ? [] : null,
           currentConversation: localGet('currentConversation'),
@@ -29,6 +29,7 @@ class App extends Component {
           currentUser: localGet('user'),
           isModalOpen: false,
           conversations: [],
+          onlineUsers: null,
         };
         this.handleMessageSubmit = this.handleMessageSubmit.bind(this);
         this.closeModal = this.closeModal.bind(this);
@@ -46,18 +47,35 @@ class App extends Component {
       }
 
       this.state.socket.on('connect', () => {
-        console.log('connect');
+
+        if (this.state.isLoggedIn) {
+          this.state.socket.emit('login', {userId: this.state.currentUser.user.user_id});
+        }
+
         this.state.socket.on('receive:message', data => {
           console.log(data);
         });
 
-        this.state.socket.on('receive:joinedConversation', data => {
-          console.log(data);
+        this.state.socket.on('update:userlist', data => {
+          this.setState({onlineUsers: data.users});
         });
 
+        this.state.socket.on('receive:joinedConversation', data => {
+          const currentConversation = this.state.currentConversation;
+          currentConversation.conversationId = data.conversationId;
+          localSet('currentConversation', currentConversation);
+
+          fetch(`${SERVER_URL}/api/conversation/${data.conversationId}/history/${Date.now()}`)
+          .then(results => results.json())
+          .then(res => {
+            console.log(res);
+            this.setState({
+              currentConversation,
+              messages: res.history,
+            });
+          });
+        });
       });
-
-
 
     }
 
@@ -70,7 +88,10 @@ class App extends Component {
         };
         messages.push(newMessage);
         this.setState({messages});
-        socket.emit('send:message', newMessage);
+        socket.emit('send:message', {
+          message: newMessage,
+          conversationId: this.state.currentConversation.conversationId,
+        });
     }
 
     closeModal() {
@@ -88,13 +109,13 @@ class App extends Component {
     }
 
     getListOfUsers() {
-      this.setState({fetchingUser: true});
+      this.setState({fetchingUsers: true});
       fetch(`${SERVER_URL}/api/users?token=${this.state.currentUser.lifeworks_token}`)
         .then((results) => results.json())
         .then((results) => {
           this.setState({
             users: results,
-            fetchingUser: false,
+            fetchingUsers: false,
           });
           this.getListOfConversations();
         })
@@ -115,7 +136,6 @@ class App extends Component {
               }
             )
           });
-          console.log(conversationDetails);
           this.setState({
             conversations: conversationDetails,
             fetchingConversations: false,
@@ -133,12 +153,13 @@ class App extends Component {
         isLoggedIn: null,
         users: null,
         conversations: [],
-        fetchingUser: false,
+        fetchingUsers: false,
         fetchingConversations: false,
         messages: null,
         currentConversation: null,
         currentUser: null,
         isModalOpen: false,
+        onlineUsers: null,
       });
     }
 
@@ -146,6 +167,7 @@ class App extends Component {
       const currentConversation = {
         name: user.name,
         id: user.user_id,
+        conversationId: null,
       };
 
       localSet('currentConversation', currentConversation);
@@ -154,7 +176,10 @@ class App extends Component {
         currentConversation,
         messages: [],
       });
-      this.state.socket.emit('join:conversation', {targetList: [user.user_id]});
+      this.state.socket.emit('join:conversation', {
+        targetList: [user.user_id],
+
+      });
     }
 
     render() {
@@ -179,12 +204,9 @@ class App extends Component {
                       <div style={{height: '100%'}}>
                         <MessageList
                           messages={this.state.messages}
-                          conversationName={this.state.currentConversation.name}
+                          conversation={this.state.currentConversation}
                         />
-                        <MessageForm
-                          onMessageSubmit={this.handleMessageSubmit}
-                          user={this.state.user}
-                        />
+                        <MessageForm onMessageSubmit={this.handleMessageSubmit} />
                       </div>
                       :
                       <EmptyConversation />
@@ -193,8 +215,9 @@ class App extends Component {
                   <div className="users-pane">
                     <UserList
                       users={this.state.users}
-                      isFetching={this.state.fetchingUser}
+                      isFetching={this.state.fetchingUsers}
                       onUserClicked={this.onUserClicked}
+                      onlineUsers={this.state.onlineUsers}
                     />
                   </div>
                 </SplitPane>
