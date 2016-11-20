@@ -23,7 +23,7 @@ class App extends Component {
           fetchingUser: false,
           messages: localGet('currentConversation') ? [] : null,
           currentConversation: localGet('currentConversation'),
-          socket: io.connect('http://localhost:4000'),
+          socket: io.connect(SERVER_URL),
           currentUser: localGet('user'),
           isModalOpen: false,
           conversations: [],
@@ -86,7 +86,7 @@ class App extends Component {
 
     getListOfUsers() {
       this.setState({fetchingUser: true});
-      fetch(`http://localhost:4000/api/users?token=${this.state.currentUser.lifeworks_token}`)
+      fetch(`${SERVER_URL}/api/users?token=${this.state.currentUser.lifeworks_token}`)
         .then((results) => results.json())
         .then((results) => {
           this.setState({

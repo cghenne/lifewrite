@@ -18,7 +18,7 @@ class LoginPage extends Component {
       this.setState({errorText: 'Please enter your username and password'});
     } else {
       this.setState({errorText: '', fetching: true});
-      fetch(`http://localhost:4000/api/login`, {
+      fetch(`${SERVER_URL}/api/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
