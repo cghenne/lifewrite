@@ -79,24 +79,30 @@ class App extends Component {
           <LoginPage onSuccessLogin={this.onSuccessLogin} />
           :
           <div>
-            <SplitPane split="vertical" minSize={50} defaultSize={100}>
+            <SplitPane split="horizontal" enableResizing={false} size={50}>
               <div><Header /></div>
-              <div>
-                <UserList users={this.state.users}/>
-                <div className="content-wrapper">
-                  <MessageList messages={this.state.messages}/>
-                  <MessageForm
-                    onMessageSubmit={this.handleMessageSubmit}
-                    user={this.state.user}
-                  />
+              <SplitPane split="vertical" minSize={50} defaultSize={100}>
+                <div>
+                <div onClick={() => this.setState({isModalOpen: true})}>Open Modal</div>
                 </div>
-              </div>
+                <SplitPane split="vertical" defaultSize={200} primary="second">
+                  <div>
+                      <MessageList messages={this.state.messages}/>
+                      <MessageForm
+                        onMessageSubmit={this.handleMessageSubmit}
+                        user={this.state.user}
+                      />
+                  </div>
+                  <div>
+                    <UserList users={this.state.users}/>
+                  </div>
+                </SplitPane>
+              </SplitPane>
             </SplitPane>
-            <div onClick={() => this.setState({isModalOpen: true})}>Open Modal</div>
             <Modal
-              isOpen={this.state.isModalOpen}
-              style={customStyles}
-              onRequestClose={this.closeModal}
+                isOpen={this.state.isModalOpen}
+                style={customStyles}
+                onRequestClose={this.closeModal}
             >
               <h1>Modal Content</h1>
               <p>Etc.</p>

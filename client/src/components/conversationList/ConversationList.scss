@@ -1,5 +1,14 @@
 .users {
+  float: right;
+  width: 300px;
+  height: 100vh;
   background-color: #bbb;
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 1;
+  padding-top: 50px;
+
   ul {
     margin: 0;
     padding: 0;
