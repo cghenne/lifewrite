@@ -19,6 +19,7 @@ class App extends Component {
         this.state = {
           isLoggedIn: localGet('isLoggedIn'),
           users: [],
+          fetchingUser: false,
           messages: [],
           conversationWith: {
             name: 'Someone I know',
@@ -65,11 +66,13 @@ class App extends Component {
     }
 
     getListOfUsers() {
+      this.setState({fetchingUser: true});
       fetch(`http://localhost:4000/api/users?token=${this.state.currentUser.lifeworks_token}`)
         .then((results) => results.json())
         .then((results) => {
           this.setState({
             users: results,
+            fetchingUser: false,
           });
         })
         .catch(console.error);
@@ -85,7 +88,7 @@ class App extends Component {
               <div><Header /></div>
               <SplitPane split="vertical" minSize={50} defaultSize={100}>
                 <div className="conversations-pane">
-                <div onClick={() => this.setState({isModalOpen: true})}>Open Modal</div>
+                  <div onClick={() => this.setState({isModalOpen: true})}>Open Modal</div>
                 </div>
                 <SplitPane split="vertical" defaultSize={200} primary="second">
                   <div style={{height: '100%'}}>
@@ -99,7 +102,7 @@ class App extends Component {
                     />
                   </div>
                   <div className="users-pane">
-                    <UserList users={this.state.users}/>
+                    <UserList users={this.state.users} isFetching={this.state.fetchingUser}/>
                   </div>
                 </SplitPane>
               </SplitPane>
