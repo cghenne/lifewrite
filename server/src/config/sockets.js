@@ -36,6 +36,13 @@ const setupIO = connectedIo => {
       )
     });
 
+    connectedSocket.on('logout', () => {
+      if (connectedSocket.hasOwnProperty('userId') && onlineUsers[connectedSocket.userId]) {
+          delete onlineUsers[connectedSocket.userId]
+      }
+      io.emit('update:userlist', onlineUsers)
+    })
+
     connectedSocket.on('disconnect', () => {
       if (connectedSocket.hasOwnProperty('userId') && onlineUsers[connectedSocket.userId]) {
           delete onlineUsers[connectedSocket.userId]
