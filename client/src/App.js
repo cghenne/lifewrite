@@ -9,6 +9,7 @@ import SplitPane from 'react-split-pane';
 import MessageForm from './components/messageForm';
 import MessageList from './components/messageList';
 import UserList from './components/userList';
+import ConversationList from './components/conversationList';
 import Header from './components/header';
 import LoginPage from './components/loginPage';
 import EmptyConversation from './components/emptyConversation';
@@ -136,11 +137,15 @@ class App extends Component {
           <div>
             <SplitPane split="horizontal" enableResizing={false} size={50}>
               <div><Header onLogout={this.onLogout}/></div>
-              <SplitPane split="vertical" minSize={50} defaultSize={100}>
+              <SplitPane split="vertical" minSize={150} defaultSize={200}>
                 <div className="conversations-pane">
-                  <div onClick={() => this.setState({isModalOpen: true})}>Open Modal</div>
+                  <ConversationList
+                    users={this.state.users}
+                    isFetching={this.state.fetchingUser}
+                    onUserClicked={this.onUserClicked}
+                  />
                 </div>
-                <SplitPane split="vertical" defaultSize={200} primary="second">
+                <SplitPane split="vertical" minSize={150} defaultSize={200} primary="second">
                   <div style={{height: '100%', backgroundColor: 'white'}}>
                     {this.state.currentConversation ?
                       <div style={{height: '100%'}}>
