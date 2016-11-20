@@ -12,6 +12,8 @@ const setupIO = connectedIo => {
 
   io.on('connection', connectedSocket => {
     connectedSocket.on('login', function (data) {
+      console.log('user logged in:')
+      console.log(data.userId)
       connectedSocket.userId = data.userId;
       onlineUsers[connectedSocket.userId] = connectedSocket
       io.sockets.emit('update:userlist', {users: _.keys(onlineUsers)})
@@ -21,19 +23,24 @@ const setupIO = connectedIo => {
       let conversation;
       const conversationId = data.conversationId
       if (conversationId) {
-        let conversation = ConversationModel.findOneById(conversationId);
+        conversation = ConversationModel.findOneById(conversationId);
       } else {
-        conversation = ConversationModel.fetchOrCreate(connectedSocket.userId, data.targetList);
-      }
+        console.log('creating new conversation with owner:')
+        console.log(connectedSocket.userId)
+        conversation = ConversationModel.fetchOrCreate(connectedSocket.userId, data.targetList);      }
       if (!conversation) {
         connectedSocket.emit('notfound:conversation')
         return;
       }
+      console.log('conversation found')
+      console.log(conversation)
+      console.log('--end --')
       conversation.users.map((userId) => {
         if (onlineUsers[userId]) {
           let userSocket = onlineUsers[userId];
           userSocket.join(data.conversationId)
           userSocket.emit('receive:joinedConversation', {conversationId: conversation._id})
+          console.log(userSocket.userId)
         }
       });
     });
