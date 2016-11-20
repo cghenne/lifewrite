@@ -3,18 +3,20 @@ const ConversationModel = {};
 var entity;
 
 ConversationModel.findOneByUserIds = (targetUserIds) => {
-  Conversation.findOne({'users' : {$in: targetUserIds}}).exec(function(err, document) {
+  Conversation.findOne({'users' : {$eq: targetUserIds}}).exec(function(err, document) {
     entity = document;
   });
   return entity;
 };
 
 ConversationModel.fetchOrCreate = (owner, targetUserIds) => {
+  console.log(owner)
+  console.log('and users')
   targetUserIds.push(owner)
+  console.log(targetUserIds)
   var conversation = ConversationModel.findOneByUserIds(targetUserIds)
   if (!conversation) {
-    ConversationModel.create(owner, targetUserIds)
-    conversation = ConversationModel.findOneByUserIds(targetUserIds)
+    conversation = ConversationModel.create(owner, targetUserIds)
   }
   return conversation;
 }
