@@ -1,14 +1,8 @@
 const conversation = {}
 const ConversationModel = require('../models/Conversation.js')
 
-conversation.createOrFetchConversation = (req, res) => {
-  let conversation = ConversationModel.fetchOrCreate(req.body.target_list);
-  res.status(200).send(conversation)
-}
-
 conversation.getConversationListForUser = (req, res, userId) => {
-    let conversationList = ConversationModel.findAllForUser(userId);
-    res.status(200).send(conversationList)
+    ConversationModel.findAllForUser(userId, res);
 }
 
 conversation.updateConversation = (req, res, conversationId) => {
