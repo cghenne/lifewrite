@@ -22,6 +22,7 @@ class App extends Component {
           isLoggedIn: localGet('isLoggedIn'),
           users: null,
           fetchingUser: false,
+          fetchingConversations: false,
           messages: localGet('currentConversation') ? [] : null,
           currentConversation: localGet('currentConversation'),
           socket: io.connect(SERVER_URL),
@@ -33,6 +34,7 @@ class App extends Component {
         this.closeModal = this.closeModal.bind(this);
         this.onSuccessLogin = this.onSuccessLogin.bind(this);
         this.getListOfUsers = this.getListOfUsers.bind(this);
+        this.getListOfConversations = this.getListOfConversations.bind(this);
         this.onLogout = this.onLogout.bind(this);
         this.onUserClicked = this.onUserClicked.bind(this);
     }
@@ -94,6 +96,30 @@ class App extends Component {
             users: results,
             fetchingUser: false,
           });
+          this.getListOfConversations();
+        })
+        .catch(console.error);
+    }
+
+    getListOfConversations() {
+      const {socket, currentUser} = this.state;
+      this.setState({fetchingConversations: true});
+      fetch(`${SERVER_URL}/api/conversation/user/${currentUser.user.user_id}`)
+        .then((results) => results.json())
+        .then((results) => {
+          var conversationDetails = results.map((result) => {
+            return (
+              {
+                user: findUser(result.users[0], this.state.users),
+                conversation: result
+              }
+            )
+          });
+          console.log(conversationDetails);
+          this.setState({
+            conversations: conversationDetails,
+            fetchingConversations: false,
+          });
         })
         .catch(console.error);
     }
@@ -106,7 +132,9 @@ class App extends Component {
       this.setState({
         isLoggedIn: null,
         users: null,
+        conversations: [],
         fetchingUser: false,
+        fetchingConversations: false,
         messages: null,
         currentConversation: null,
         currentUser: null,
@@ -140,8 +168,8 @@ class App extends Component {
               <SplitPane split="vertical" minSize={150} defaultSize={200}>
                 <div className="conversations-pane">
                   <ConversationList
-                    users={this.state.users}
-                    isFetching={this.state.fetchingUser}
+                    conversations={this.state.conversations}
+                    isFetching={this.state.fetchingConversations}
                     onUserClicked={this.onUserClicked}
                   />
                 </div>
@@ -191,6 +219,16 @@ App.propTypes = {
 };
 
 export default App;
+
+const findUser = (searchId, users) => {
+  let foundUser = {};
+  users.map((user) => {
+    if (user.user_id === searchId) {
+      foundUser = user;
+    }
+  });
+  return foundUser;
+}
 
 const customStyles = {
   content : {

@@ -1,4 +1,4 @@
-.users {
+.conversations {
   background-color: #fff;
   height: 100%;
   .avatar {
@@ -6,10 +6,9 @@
     float:left;
     margin-right: 5px;
   }
-  .user-status {
+  .conversation-status {
     margin-left: 22px;
     margin-top: 0px;
-    display: block;
     width: 10px;
     height: 10px;
     position: absolute;
@@ -17,14 +16,12 @@
     -moz-border-radius: 10px;
     -webkit-border-radius: 10px;
     border-radius: 10px;
+    display: none;
   }
 
-  .online .user-status {
-    background-color: green;
-  }
-
-  .away .user-status {
-    background-color: orange;
+  .new .conversation-status {
+    display: block;
+    background-color: red;
   }
 
   ul {
