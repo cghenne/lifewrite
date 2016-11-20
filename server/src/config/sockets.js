@@ -1,6 +1,6 @@
 const ConversationModel = require('../models/Conversation.js')
 let io = null;
-let socket = null;
+let connectedSocket = null;
 
 var onlineConversations = {}
 var onlineUsers = {}
@@ -9,54 +9,55 @@ const setupIO = connectedIo => {
   io = connectedIo;
 
   io.on('connection', connectedSocket => {
-    socket = connectedSocket;
-
-    socket.on('login', function (data) {
-      socket.userId = data.userId;
-      onlineUsers[socket.userId] = socket.userId;
+    connectedSocket.on('login', function (data) {
+      connectedSocket.userId = data.userId;
+      onlineUsers[connectedSocket.userId] = connectedSocket.userId;
+      io.emit('update:userlist', onlineUsers)
     })
 
-    socket.on('join:conversation', function (data) {
+    connectedSocket.on('join:conversation', function (data) {
       const conversationId = data.conversationId
-      if (!onlineConversations[conversationId]) {
-          console.log(`no conversation ${conversationId} online :(`)
-          let conversation = ConversationModel.findOneById(conversationId);
-          if (!conversation) {
-            socket.emit('notfound:conversation')
-            return;
-          }
-          onlineConversations[conversationId] = []
-          let conversationOnlineUsers = conversation.users.filter(function(user) {
-            return onlineUsers[user] ? onlineUsers[user] : false
-          })
-          onlineConversations[conversationId].push(socket)
-          onlineConversations[conversationId].push(conversationOnlineUsers);
+      if (conversationId) {
+        let conversation = ConversationModel.findOneById(conversationId);
+        if (!conversation) {
+          connectedSocket.emit('notfound:conversation')
+          return;
+        }
+      } else {
+        let conversation = ConversationModel.fetchOrCreate(data.targetList);
       }
-      // onlineConversations[conversationId].emit('invited:chat', conversationId);
+      connectedSocket.join(data.conversationId)
     });
 
-    socket.on('send:message', function (data) {
-      const conversationId = data.conversationId
-      const message = data.message.text
-      // onlineConversations[conversationId].emit('heh')
+    connectedSocket.on('send:message', function (data) {
+      connectedSocket.broadcast.to(data.conversationId).emit(
+        'receive:message',
+        {conversationId: data.conversationId, sender: connectedSocket.userId, message: data.message.text}
+      )
     });
 
-    socket.on('disconnect', () => {
-      if (socket.hasOwnProperty('userId') && onlineUsers[socket.userId]) {
-          delete onlineUsers[socket.userId]
+    connectedSocket.on('logout', () => {
+      if (connectedSocket.hasOwnProperty('userId') && onlineUsers[connectedSocket.userId]) {
+          delete onlineUsers[connectedSocket.userId]
       }
-      socket = null
-      io.emit('update userlist', onlineUsers)
-      console.log('user disconnected');
+      io.emit('update:userlist', onlineUsers)
+    })
+
+    connectedSocket.on('disconnect', () => {
+      if (connectedSocket.hasOwnProperty('userId') && onlineUsers[connectedSocket.userId]) {
+          delete onlineUsers[connectedSocket.userId]
+      }
+      connectedSocket = null
+      io.emit('update:userlist', onlineUsers)
     });
   });
 }
 
-const isConnected = () => socket !== null;
+const isConnected = () => connectedSocket !== null;
 
 const emitEvent = (eventName, data) => {
   if (isConnected()) {
-    socket.emit(eventName, data);
+    connectedSocket.emit(eventName, data);
     return true;
   } else {
     return false;
