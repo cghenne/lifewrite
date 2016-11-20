@@ -127,6 +127,7 @@ class App extends Component {
       fetch(`${SERVER_URL}/api/conversation/user/${currentUser.user.user_id}`)
         .then((results) => results.json())
         .then((results) => {
+          console.log(results);
           var conversationDetails = results.map((result) => {
             return (
               {
