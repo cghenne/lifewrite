@@ -21,7 +21,7 @@ class MessageList extends Component {
   render() {
     return (
       <div className='messages'>
-        <h1>Conversation with: {this.props.conversationName}</h1>
+        <h1>Conversation with: {this.props.conversation.name}</h1>
         <div className='messageContainer' ref="messagesContainer">
           {this.props.messages.map((message, i) => {
             return (
@@ -41,7 +41,7 @@ class MessageList extends Component {
 MessageList.displayName = 'MessageList';
 MessageList.propTypes = {
   messages: React.PropTypes.array,
-  conversationName: React.PropTypes.string,
+  conversation: React.PropTypes.object,
 };
 
 export default MessageList;

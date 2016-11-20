@@ -20,7 +20,7 @@ class App extends Component {
         this.state = {
           isLoggedIn: localGet('isLoggedIn'),
           users: null,
-          fetchingUser: false,
+          fetchingUsers: false,
           messages: localGet('currentConversation') ? [] : null,
           currentConversation: localGet('currentConversation'),
           socket: io.connect(SERVER_URL),
@@ -49,12 +49,21 @@ class App extends Component {
         });
 
         this.state.socket.on('receive:joinedConversation', data => {
-          console.log(data);
+          const currentConversation = this.state.currentConversation;
+          currentConversation.conversationId = data.conversationId;
+          localSet('currentConversation', currentConversation);
+
+          fetch(`${SERVER_URL}/api/conversation/${data.conversationId}/history/${Date.now()}`)
+          .then(results => results.json())
+          .then(res => {
+            console.log(res);
+            // this.setState({
+            //   currentConversation,
+            //   messages: res.body,
+            // });
+          });
         });
-
       });
-
-
 
     }
 
@@ -85,13 +94,13 @@ class App extends Component {
     }
 
     getListOfUsers() {
-      this.setState({fetchingUser: true});
+      this.setState({fetchingUsers: true});
       fetch(`${SERVER_URL}/api/users?token=${this.state.currentUser.lifeworks_token}`)
         .then((results) => results.json())
         .then((results) => {
           this.setState({
             users: results,
-            fetchingUser: false,
+            fetchingUsers: false,
           });
         })
         .catch(console.error);
@@ -105,7 +114,7 @@ class App extends Component {
       this.setState({
         isLoggedIn: null,
         users: null,
-        fetchingUser: false,
+        fetchingUsers: false,
         messages: null,
         currentConversation: null,
         currentUser: null,
@@ -117,6 +126,7 @@ class App extends Component {
       const currentConversation = {
         name: user.name,
         id: user.user_id,
+        conversationId: null,
       };
 
       localSet('currentConversation', currentConversation);
@@ -125,7 +135,10 @@ class App extends Component {
         currentConversation,
         messages: [],
       });
-      this.state.socket.emit('join:conversation', {targetList: [user.user_id]});
+      this.state.socket.emit('join:conversation', {
+        targetList: [user.user_id],
+
+      });
     }
 
     render() {
@@ -146,12 +159,9 @@ class App extends Component {
                       <div style={{height: '100%'}}>
                         <MessageList
                           messages={this.state.messages}
-                          conversationName={this.state.currentConversation.name}
+                          conversation={this.state.currentConversation}
                         />
-                        <MessageForm
-                          onMessageSubmit={this.handleMessageSubmit}
-                          user={this.state.user}
-                        />
+                        <MessageForm onMessageSubmit={this.handleMessageSubmit} />
                       </div>
                       :
                       <EmptyConversation />
@@ -160,7 +170,7 @@ class App extends Component {
                   <div className="users-pane">
                     <UserList
                       users={this.state.users}
-                      isFetching={this.state.fetchingUser}
+                      isFetching={this.state.fetchingUsers}
                       onUserClicked={this.onUserClicked}
                     />
                   </div>
