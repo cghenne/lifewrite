@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import Modal from 'react-modal';
 import './css/Normalize.scss';
 import './App.scss';
-import { localGet, localSet } from './global/storage';
+import { localGet, localSet, localRemove } from './global/storage';
 const io = require('socket.io-client');
 import SplitPane from 'react-split-pane';
 
@@ -18,21 +18,20 @@ class App extends Component {
         super(props);
         this.state = {
           isLoggedIn: localGet('isLoggedIn'),
-          users: [],
+          users: null,
           fetchingUser: false,
-          messages: [],
-          conversationWith: {
-            name: 'Someone I know',
-            id: 'senderId'
-          },
+          messages: null,
+          currentConversation: null,
           socket: io.connect('http://localhost:4000'),
-          currentUser: localGet('user'), // example on how to use it
+          currentUser: localGet('user'),
           isModalOpen: false,
         };
         this.handleMessageSubmit = this.handleMessageSubmit.bind(this);
         this.closeModal = this.closeModal.bind(this);
         this.onSuccessLogin = this.onSuccessLogin.bind(this);
         this.getListOfUsers = this.getListOfUsers.bind(this);
+        this.onLogout = this.onLogout.bind(this);
+        this.onUserClicked = this.onUserClicked.bind(this);
     }
 
     componentDidMount() {
@@ -57,6 +56,7 @@ class App extends Component {
     }
 
     onSuccessLogin(user) {
+      this.state.socket.emit('login', {userId: user.user_id});
       localSet('isLoggedIn', true);
       localSet('user', user);
       this.setState({
@@ -78,6 +78,32 @@ class App extends Component {
         .catch(console.error);
     }
 
+    onLogout() {
+      this.state.socket.emit('logout');
+      localRemove('isLoggedIn');
+      localRemove('user');
+      this.setState({
+        isLoggedIn: null,
+        users: null,
+        fetchingUser: false,
+        messages: null,
+        currentConversation: null,
+        currentUser: null,
+        isModalOpen: false,
+      });
+    }
+
+    onUserClicked(user) {
+      this.setState({
+        currentConversation: {
+          name: user.name,
+          id: user.user_id,
+        },
+        messages: [],
+      });
+      this.state.socket.emit('join:conversation', {targetList: [user.user_id]});
+    }
+
     render() {
       return (
           !this.state.isLoggedIn ?
@@ -85,24 +111,34 @@ class App extends Component {
           :
           <div>
             <SplitPane split="horizontal" enableResizing={false} size={50}>
-              <div><Header /></div>
+              <div><Header onLogout={this.onLogout}/></div>
               <SplitPane split="vertical" minSize={50} defaultSize={100}>
                 <div className="conversations-pane">
                   <div onClick={() => this.setState({isModalOpen: true})}>Open Modal</div>
                 </div>
                 <SplitPane split="vertical" defaultSize={200} primary="second">
-                  <div style={{height: '100%'}}>
-                    <MessageList
-                      messages={this.state.messages}
-                      conversationName={this.state.conversationWith.name}
-                    />
-                    <MessageForm
-                      onMessageSubmit={this.handleMessageSubmit}
-                      user={this.state.user}
-                    />
+                  <div style={{height: '100%', backgroundColor: 'white'}}>
+                    {this.state.currentConversation ?
+                      <div>
+                        <MessageList
+                          messages={this.state.messages}
+                          conversationName={this.state.currentConversation.name}
+                        />
+                        <MessageForm
+                          onMessageSubmit={this.handleMessageSubmit}
+                          user={this.state.user}
+                        />
+                      </div>
+                      :
+                      <div>Start talking</div>
+                    }
                   </div>
                   <div className="users-pane">
-                    <UserList users={this.state.users} isFetching={this.state.fetchingUser}/>
+                    <UserList
+                      users={this.state.users}
+                      isFetching={this.state.fetchingUser}
+                      onUserClicked={this.onUserClicked}
+                    />
                   </div>
                 </SplitPane>
               </SplitPane>
