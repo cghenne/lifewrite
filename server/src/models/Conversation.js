@@ -9,6 +9,15 @@ ConversationModel.findOneByUserIds = (targetUserIds) => {
   return entity;
 };
 
+ConversationModel.fetchOrCreate = (targetUserIds) => {
+  var conversation = ConversationModel.findOneByUserIds(req.body.target_list)
+  if (!conversation) {
+    ConversationModel.create(req.body.owner, req.body.name, req.body.topic, req.body.target_list)
+    conversation = ConversationModel.findOneByUserIds(req.body.target_list)
+  }
+  return conversation;
+}
+
 ConversationModel.findOneById = (conversationId) => {
   Conversation.findById(conversationId).exec(function(err, document){
     entity = document;
