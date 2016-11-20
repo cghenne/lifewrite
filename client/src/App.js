@@ -79,8 +79,8 @@ class App extends Component {
           <LoginPage onSuccessLogin={this.onSuccessLogin} />
           :
           <div>
-            <Header />
-            <div className="content-wrapper">
+            <SplitPane split="horizontal" enableResizing={false} size={50}>
+              <div><Header /></div>
               <SplitPane split="vertical" minSize={50} defaultSize={100}>
                 <div>left</div>
                 <SplitPane split="vertical" defaultSize={200} primary="second">
@@ -96,13 +96,13 @@ class App extends Component {
                   </div>
                 </SplitPane>
               </SplitPane>
-            </div>
+            </SplitPane>
             <div onClick={() => this.setState({isModalOpen: true})}>Open Modal</div>
-              <Modal
+            <Modal
                 isOpen={this.state.isModalOpen}
                 style={customStyles}
                 onRequestClose={this.closeModal}
-              >
+            >
               <h1>Modal Content</h1>
               <p>Etc.</p>
               <button onClick={this.closeModal}>close</button>
