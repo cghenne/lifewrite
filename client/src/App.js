@@ -75,13 +75,13 @@ class App extends Component {
     }
 
     onSuccessLogin(user) {
-      this.state.socket.emit('login', {userId: user.user_id});
       localSet('isLoggedIn', true);
       localSet('user', user);
       this.setState({
         isLoggedIn: true,
         currentUser: user,
       }, this.getListOfUsers);
+      this.state.socket.emit('login', {userId: user.user.user_id});
     }
 
     getListOfUsers() {
