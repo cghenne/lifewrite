@@ -1,12 +1,12 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-var HistoryLogSchema = mongoose.Schema({
+const HistoryLogSchema = mongoose.Schema({
 	date: {type: Date, default: Date.now},
 	message: String,
 	sender: String
 });
 
-var ConversationHistorySchema = mongoose.Schema({
+const ConversationHistorySchema = mongoose.Schema({
   created_on: {type: Date, default: Date.now},
   conversation: { type: mongoose.Schema.ObjectId, ref: 'Conversation' },
   history: [HistoryLogSchema]

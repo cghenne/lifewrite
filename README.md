@@ -9,13 +9,13 @@ LifeWorks Hackathon
 Setup all dependencies
 
 ```
-./dicker.sh up
+./dicker up
 ```
 
 Login to the SSH
 
 ```
-./dicker.sh ssh
+./dicker ssh
 ```
 
 ## Client Instructions

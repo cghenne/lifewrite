@@ -1,6 +1,6 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
-var ConversationSchema = mongoose.Schema({
+const ConversationSchema = mongoose.Schema({
   name: String,
   topic: String,
   created_on: { type: Date, default: Date.now },
