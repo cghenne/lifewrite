@@ -9,7 +9,7 @@ PARAM {
 }
 */
 lifeworks.getUsers = req => {
-  return fetch('https://api.test.lifeworks.com/user', {
+  return fetch('https://api.lifeworks.com/user', {
     method: 'GET',
      headers: {
        'Accept': 'application/vnd.wam-api-v1.3+json',
@@ -40,7 +40,7 @@ BODY {
 }
 */
 lifeworks.login = req => {
-  return fetch('https://shim.test.lifeworks.com/authenticate', {
+  return fetch('https://shim.lifeworks.com/authenticate', {
     method: 'POST',
     headers: {
       'Accept': 'application/json'

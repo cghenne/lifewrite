@@ -10,7 +10,7 @@ ConversationModel.findOneByUserIds = (targetUserIds) => {
 };
 
 ConversationModel.findOneById = (conversationId) => {
-  Conversation.findOneById(conversationId).exec(function(err, document){
+  Conversation.findById(conversationId).exec(function(err, document){
     entity = document;
   })
   return entity;
