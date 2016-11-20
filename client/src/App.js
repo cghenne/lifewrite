@@ -49,7 +49,10 @@ class App extends Component {
       this.state.socket.on('connect', () => {
 
         this.state.socket.on('receive:message', data => {
+          let {messages} = this.state;
           console.log(data);
+          messages.push(data.message);
+          this.setState({messages: messages});
         });
 
         this.state.socket.on('update:userlist', data => {
