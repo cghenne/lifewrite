@@ -11,7 +11,7 @@ import MessageList from './components/messageList';
 import UserList from './components/userList';
 import Header from './components/header';
 import LoginPage from './components/loginPage';
-// import EmptyConversation from './components/emptyConversation';
+import EmptyConversation from './components/emptyConversation';
 
 class App extends Component {
 
@@ -132,7 +132,7 @@ class App extends Component {
                         />
                       </div>
                       :
-                      <div>Empty</div>
+                      <EmptyConversation />
                     }
                   </div>
                   <div className="users-pane">
