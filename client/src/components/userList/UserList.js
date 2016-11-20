@@ -24,7 +24,7 @@ const UserList = React.createClass({
                   const image = cloudinary(user.image_profile, 'h_30,w_30,c_fill');
                   return (
                     <li key={key}>
-                      <a key={key} onClick={() => this.props.onUserClicked(user)} className="online">
+                      <a href="#" onClick={() => this.props.onUserClicked(user)} className="online">
                         <img src={image} className="avatar"/> {user.name}
                       </a>
                     </li>

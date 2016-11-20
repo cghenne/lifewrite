@@ -8,14 +8,15 @@
   ul {
     margin: 0;
     padding: 0;
+    margin-top: 5px;
     li {
-      padding: 10px;
+      padding: 0;
       clear:both;
       list-style: none;
       a {
         height: 30px;
         text-decoration: none;
-        color: #000;
+        color: grey;
         line-height: 30px;
         float:left;
         display: block;
@@ -24,6 +25,11 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        padding: 10px;
+      }
+      a:hover, a:active, a:focus {
+        color: white;
+        background: #0091DE;
       }
 
       a::before {
