@@ -23,10 +23,12 @@ const UserList = React.createClass({
                 this.props.users.map((user, key) => {
                   const image = cloudinary(user.image_profile, 'h_30,w_30,c_fill');
                   return (
-                    <li key={key}>
-                      <a href="#" onClick={() => this.props.onUserClicked(user)} className="online">
-                        <img src={image} className="avatar"/> {user.name}
-                      </a>
+                    <li className="online" key={key} onClick={() => this.props.onUserClicked(user)}>
+                      <div>
+                        <img src={image} className="avatar"/>
+                        <div className="user-status" />
+                        {user.name}
+                      </div>
                     </li>
                   );
                 })

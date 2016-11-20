@@ -13,8 +13,10 @@ class MessageForm extends Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    this.props.onMessageSubmit(this.state.text);
-    this.setState({ text: '' });
+    if (this.state.text !== '') {
+      this.props.onMessageSubmit(this.state.text);
+      this.setState({ text: '' });
+    }
   }
 
   changeHandler(e) {

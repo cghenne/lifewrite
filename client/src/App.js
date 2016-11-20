@@ -21,8 +21,8 @@ class App extends Component {
           isLoggedIn: localGet('isLoggedIn'),
           users: null,
           fetchingUser: false,
-          messages: null,
-          currentConversation: null,
+          messages: localGet('currentConversation') ? [] : null,
+          currentConversation: localGet('currentConversation'),
           socket: io.connect('http://localhost:4000'),
           currentUser: localGet('user'),
           isModalOpen: false,
@@ -85,6 +85,7 @@ class App extends Component {
       this.state.socket.emit('logout');
       localRemove('isLoggedIn');
       localRemove('user');
+      localRemove('currentConversation');
       this.setState({
         isLoggedIn: null,
         users: null,
@@ -97,11 +98,15 @@ class App extends Component {
     }
 
     onUserClicked(user) {
+      const currentConversation = {
+        name: user.name,
+        id: user.user_id,
+      };
+
+      localSet('currentConversation', currentConversation);
+
       this.setState({
-        currentConversation: {
-          name: user.name,
-          id: user.user_id,
-        },
+        currentConversation,
         messages: [],
       });
       this.state.socket.emit('join:conversation', {targetList: [user.user_id]});
