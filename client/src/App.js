@@ -18,14 +18,12 @@ class App extends Component {
         super(props);
         this.state = {
           isLoggedIn: localGet('isLoggedIn'),
-          myTitle: 'Wrong title',
           users: [],
-          messages: [
-            {
-              user:'user1',
-              text:'text 1'
-            }
-          ],
+          messages: [],
+          conversationWith: {
+            name: 'Someone I know',
+            id: 'senderId'
+          },
           socket: io.connect('http://localhost:4000'),
           currentUser: localGet('user'), // example on how to use it
           isModalOpen: false,
@@ -43,8 +41,12 @@ class App extends Component {
     }
 
     handleMessageSubmit(message) {
-        var {messages, socket} = this.state;
-        messages.push(message);
+        const {messages, socket, conversationWith} = this.state;
+        messages.push({
+          sender: conversationWith.id,
+          date: Date.now(),
+          message: message,
+        });
         this.setState({messages});
         socket.emit('send:message', message);
     }
@@ -86,12 +88,15 @@ class App extends Component {
                 <div onClick={() => this.setState({isModalOpen: true})}>Open Modal</div>
                 </div>
                 <SplitPane split="vertical" defaultSize={200} primary="second">
-                  <div>
-                      <MessageList messages={this.state.messages}/>
-                      <MessageForm
-                        onMessageSubmit={this.handleMessageSubmit}
-                        user={this.state.user}
-                      />
+                  <div style={{height: '100%'}}>
+                    <MessageList
+                      messages={this.state.messages}
+                      conversationName={this.state.conversationWith.name}
+                    />
+                    <MessageForm
+                      onMessageSubmit={this.handleMessageSubmit}
+                      user={this.state.user}
+                    />
                   </div>
                   <div className="users-pane">
                     <UserList users={this.state.users}/>

@@ -1,3 +1,36 @@
-.blue {
-  color: blue;
+.message {
+  width: 75%;
+  color: white;
+  font-size: 16px;
+  margin-bottom: 10px;
+
+
+
+  &.me {
+    float: right;
+    text-align: right;
+
+  }
+
+  &.notMe {
+    float: left;
+
+  }
+
+  .messageDate {
+    font-size: 14px;
+    margin-bottom: 5px;
+    color: grey;
+  }
+
+  .messageContent {
+    padding: 5px 15px;
+  }
+
+  &.me .messageContent {
+    background: lighten(#0091DE, 20);
+  }
+  &.notMe .messageContent {
+    background: darken(#0091DE, 20);
+  }
 }
