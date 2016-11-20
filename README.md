@@ -20,15 +20,15 @@ Login to the SSH
 
 ## Client Instructions
 
-From under terminal: 
+From under terminal:
 - `npm install` (once)
 
-- `npm run client` to start the client development build at [http://localhost:3000](http://localhost:3000)
+- `SERVER_URL="http://localhost:4000" npm run client` to start the client development build at [http://localhost:3000](http://localhost:3000)
 
 
 ## API Instructions
 
-- `npm run server`
+- `npm run server` (server will be on localhost:4000)
 
 
 ## build

@@ -7,6 +7,10 @@ var paths = require('./paths');
 
 var BACKPACK = /node_modules\/bpk-/;
 
+var envVariables = {
+  SERVER_URL: JSON.stringify(process.env.SERVER_URL),
+};
+
 module.exports = {
   devtool: 'eval',
   entry: [
@@ -34,7 +38,8 @@ module.exports = {
       // a dependency in generated projects.
       // See https://github.com/facebookincubator/create-react-app/issues/255
       'babel-runtime/regenerator': require.resolve('babel-runtime/regenerator')
-    }
+    },
+    envVariables: envVariables,
   },
   resolveLoader: {
     root: paths.ownNodeModules,
@@ -98,6 +103,7 @@ module.exports = {
     return [autoprefixer];
   },
   plugins: [
+    new webpack.DefinePlugin(envVariables),
     new HtmlWebpackPlugin({
       inject: true,
       template: paths.appHtml,
