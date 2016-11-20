@@ -82,7 +82,9 @@ class App extends Component {
             <SplitPane split="horizontal" enableResizing={false} size={50}>
               <div><Header /></div>
               <SplitPane split="vertical" minSize={50} defaultSize={100}>
-                <div>left</div>
+                <div>
+                <div onClick={() => this.setState({isModalOpen: true})}>Open Modal</div>
+                </div>
                 <SplitPane split="vertical" defaultSize={200} primary="second">
                   <div>
                       <MessageList messages={this.state.messages}/>
@@ -97,7 +99,6 @@ class App extends Component {
                 </SplitPane>
               </SplitPane>
             </SplitPane>
-            <div onClick={() => this.setState({isModalOpen: true})}>Open Modal</div>
             <Modal
                 isOpen={this.state.isModalOpen}
                 style={customStyles}

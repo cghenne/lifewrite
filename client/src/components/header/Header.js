@@ -4,7 +4,7 @@ import './Header.scss';
 const Header = () => (
   <header>
       <div className="logo">
-        <a href="#">LifeWrite</a>
+        <a href="javascript:;">LifeWrite</a>
       </div>
       <div className="status">
         <select>

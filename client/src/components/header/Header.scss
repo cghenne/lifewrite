@@ -1,6 +1,5 @@
 $headerHeight: 50px;
 $headerBackgroundColor: transparent;
-$headerHoverBackgroundColor: #333;
 $headerColor: #efefef;
 
 header {
@@ -21,16 +20,14 @@ header {
   .logo {
     margin-left: 15px;
     width: auto;
+    margin-top: 0px;
     a {
       padding: 0 5px;
       display: inline-block;
       height: inherit;
       color: $headerColor;
       text-decoration: none;
-
-      &:hover {
-        background-color: $headerHoverBackgroundColor;
-      }
+      cursor: default;
 
       &::before {
         background-image: url('../../images/Lifewrite.png');
