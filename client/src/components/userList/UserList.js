@@ -24,8 +24,9 @@ var UserList = React.createClass({
                   var image = cloudinary(user.image_profile, 'h_30,w_30,c_fill');
                   return (
                     <li key={key}>
-                      <img src={image} className="avatar"/>
-                      <a href="#" className="online">{user.name}</a>
+                      <a href="#" className="online">
+                        <img src={image} className="avatar"/> {user.name}
+                      </a>
                     </li>
                   );
                 })
