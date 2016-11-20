@@ -11,6 +11,7 @@ import MessageList from './components/messageList';
 import UserList from './components/userList';
 import Header from './components/header';
 import LoginPage from './components/loginPage';
+// import EmptyConversation from './components/emptyConversation';
 
 class App extends Component {
 
@@ -36,6 +37,7 @@ class App extends Component {
 
     componentDidMount() {
       if (this.state.isLoggedIn) {
+        this.state.socket.emit('login', {userId: this.state.currentUser.user.user_id});
         this.getListOfUsers();
       }
     }
@@ -130,7 +132,7 @@ class App extends Component {
                         />
                       </div>
                       :
-                      <div>Start talking</div>
+                      <div>Empty</div>
                     }
                   </div>
                   <div className="users-pane">
