@@ -1,54 +1,64 @@
-.users {
-  float: right;
-  width: 300px;
-  height: 100vh;
-  background-color: #bbb;
-  position: fixed;
-  top: 0;
-  right: 0;
-  z-index: 1;
-  padding-top: 50px;
-
-  ul {
-    margin: 0;
-    padding: 0;
-
-    li {
-      list-style: none;
-      padding: 4px 10px;
-      border-bottom: 1px dotted #ddd;
-
-      &:hover {
-        background-color: #afafaf;
-      }
-
-      a::before {
-        content: '';
-        margin-right: 3px;
-        display: inline-block;
-        width: 10px;
-        height: 10px;
-        -moz-border-radius: 10px;
-        -webkit-border-radius: 10px;
-        border-radius: 10px;
-      }
-
-      a.online::before {
-        background-color: green;
-      }
-
-      a.away::before {
-        background-color: orange;
-      }
-    }
+.conversations {
+  background-color: #fff;
+  height: 100%;
+  .avatar {
+    border-radius: 50%;
+    float:left;
+    margin-right: 5px;
+  }
+  .conversation-status {
+    margin-left: 22px;
+    margin-top: 0px;
+    width: 10px;
+    height: 10px;
+    position: absolute;
+    border: 1px solid #EAEAEA;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    display: none;
   }
 
-  h3 {
-    background-color: blue;
-    height: 30px;
-    line-height: 30px;
+  .new .conversation-status {
+    display: block;
+    background-color: red;
+  }
+
+  ul {
+    height: 100%;
     margin: 0;
-    padding: 5px 10px;
-    background-color: #aaa;
+    padding: 0;
+    margin-top: 5px;
+    color: grey;
+    overflow: auto;
+    li {
+      position: relative;
+      padding: 10px;
+      list-style: none;
+      height: 30px;
+      div {
+        height: 30px;
+        text-decoration: none;
+        line-height: 30px;
+        display: block;
+        padding: 0;
+        width: 100%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+    li:hover, li:active, li:focus {
+      color: white;
+      background: #0091DE;
+      cursor: pointer;
+    }
+  }
+  h3 {
+    font-size: 20px;
+    margin: 0 10px;
+    padding: 10px 0;
+    border-bottom: 1px solid #0091DE;
+    color: darken(#0091DE, 50);
   }
 }
