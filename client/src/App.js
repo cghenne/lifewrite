@@ -44,13 +44,14 @@ class App extends Component {
 
     handleMessageSubmit(message) {
         const {messages, socket, currentUser} = this.state;
-        messages.push({
+        const newMessage = {
           sender: currentUser.user.user_id,
           date: Date.now(),
           message: message,
-        });
+        };
+        messages.push(newMessage);
         this.setState({messages});
-        socket.emit('send:message', message);
+        socket.emit('send:message', newMessage);
     }
 
     closeModal() {
