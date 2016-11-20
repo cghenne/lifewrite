@@ -27,6 +27,7 @@ class App extends Component {
           currentUser: localGet('user'),
           isModalOpen: false,
           conversations: [],
+          onlineUsers: null,
         };
         this.handleMessageSubmit = this.handleMessageSubmit.bind(this);
         this.closeModal = this.closeModal.bind(this);
@@ -43,9 +44,12 @@ class App extends Component {
       }
 
       this.state.socket.on('connect', () => {
-        console.log('connect');
         this.state.socket.on('receive:message', data => {
           console.log(data);
+        });
+
+        this.state.socket.on('update:userlist', data => {
+          this.setState({onlineUsers: data.users});
         });
 
         this.state.socket.on('receive:joinedConversation', data => {
@@ -119,6 +123,7 @@ class App extends Component {
         currentConversation: null,
         currentUser: null,
         isModalOpen: false,
+        onlineUsers: null,
       });
     }
 
@@ -172,6 +177,7 @@ class App extends Component {
                       users={this.state.users}
                       isFetching={this.state.fetchingUsers}
                       onUserClicked={this.onUserClicked}
+                      onlineUsers={this.state.onlineUsers}
                     />
                   </div>
                 </SplitPane>

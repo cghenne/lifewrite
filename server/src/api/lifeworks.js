@@ -9,12 +9,13 @@ PARAM {
 }
 */
 lifeworks.getUsers = req => {
-  return fetch('https://api.lifeworks.com/user', {
+  return fetch('https://api.lifeworks.com/user?limit=10000', {
     method: 'GET',
      headers: {
        'Accept': 'application/vnd.wam-api-v1.3+json',
        'Wam-Token': req.query.token
-     }
+     },
+
   })
   .then(response => response.json())
   .then(jsonResponse => {
