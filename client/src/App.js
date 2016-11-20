@@ -44,6 +44,11 @@ class App extends Component {
       }
 
       this.state.socket.on('connect', () => {
+
+        if (this.state.isLoggedIn) {
+          this.state.socket.emit('login', {userId: this.state.currentUser.user.user_id});
+        }
+
         this.state.socket.on('receive:message', data => {
           console.log(data);
         });
