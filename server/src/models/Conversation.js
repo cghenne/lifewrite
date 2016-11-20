@@ -9,11 +9,11 @@ ConversationModel.findOneByUserIds = (targetUserIds) => {
   return entity;
 };
 
-ConversationModel.fetchOrCreate = (targetUserIds) => {
-  var conversation = ConversationModel.findOneByUserIds(req.body.target_list)
+ConversationModel.fetchOrCreate = (owner, targetUserIds) => {
+  var conversation = ConversationModel.findOneByUserIds(targetUserIds)
   if (!conversation) {
-    ConversationModel.create(req.body.owner, req.body.name, req.body.topic, req.body.target_list)
-    conversation = ConversationModel.findOneByUserIds(req.body.target_list)
+    ConversationModel.create(owner, targetUserIds)
+    conversation = ConversationModel.findOneByUserIds(targetUserIds)
   }
   return conversation;
 }
@@ -32,7 +32,7 @@ ConversationModel.findAllForUser = (userId) => {
   return entity;
 }
 
-ConversationModel.create = (ownerId, name = "Default", topic = "", targetUserIds) => {
+ConversationModel.create = (ownerId, targetUserIds, name = "Default", topic = "") => {
   var conversation = new Conversation({
     name: name + 'Conversation',
     topic: topic,

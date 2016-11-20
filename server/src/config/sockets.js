@@ -1,4 +1,6 @@
 const ConversationModel = require('../models/Conversation.js')
+const _ = require('lodash');
+
 let io = null;
 let connectedSocket = null;
 
@@ -10,12 +12,15 @@ const setupIO = connectedIo => {
 
   io.on('connection', connectedSocket => {
     connectedSocket.on('login', function (data) {
+      console.log(data)
       connectedSocket.userId = data.userId;
-      onlineUsers[connectedSocket.userId] = connectedSocket.userId;
+      onlineUsers[connectedSocket.userId] = connectedSocket
+      console.log(onlineUsers)
       io.emit('update:userlist', onlineUsers)
     })
 
     connectedSocket.on('join:conversation', function (data) {
+      console.log('got join conversation')
       const conversationId = data.conversationId
       if (conversationId) {
         let conversation = ConversationModel.findOneById(conversationId);
@@ -24,12 +29,14 @@ const setupIO = connectedIo => {
           return;
         }
       } else {
-        let conversation = ConversationModel.fetchOrCreate(data.targetList);
+        let conversation = ConversationModel.fetchOrCreate(connectedSocket.userId, data.targetList);
       }
+      console.log(onlineUsers)
       connectedSocket.join(data.conversationId)
     });
 
     connectedSocket.on('send:message', function (data) {
+      console.log('got message')
       connectedSocket.broadcast.to(data.conversationId).emit(
         'receive:message',
         {conversationId: data.conversationId, sender: connectedSocket.userId, message: data.message.text}
@@ -37,6 +44,7 @@ const setupIO = connectedIo => {
     });
 
     connectedSocket.on('logout', () => {
+      console.log('got logout')
       if (connectedSocket.hasOwnProperty('userId') && onlineUsers[connectedSocket.userId]) {
           delete onlineUsers[connectedSocket.userId]
       }
@@ -44,6 +52,7 @@ const setupIO = connectedIo => {
     })
 
     connectedSocket.on('disconnect', () => {
+      console.log('got dc')
       if (connectedSocket.hasOwnProperty('userId') && onlineUsers[connectedSocket.userId]) {
           delete onlineUsers[connectedSocket.userId]
       }
