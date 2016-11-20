@@ -1,5 +1,8 @@
 .users {
-  background-color: #bbb;
+  background-color: #fff;
+  .avatar {
+    border-radius: 50%;
+  }
   ul {
     margin: 0;
     padding: 0;
@@ -7,18 +10,14 @@
     li {
       list-style: none;
       padding: 4px 10px;
-      border-bottom: 1px dotted #ddd;
-
-      &:hover {
-        background-color: #afafaf;
-      }
 
       a::before {
         content: '';
-        margin-right: 3px;
+        margin-left: -8px;
         display: inline-block;
         width: 10px;
         height: 10px;
+        border: 1px solid #EAEAEA;
         -moz-border-radius: 10px;
         -webkit-border-radius: 10px;
         border-radius: 10px;

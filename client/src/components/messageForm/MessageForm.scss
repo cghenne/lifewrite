@@ -1,3 +1,16 @@
-.blue {
-  color: blue;
+.messageForm {
+  height: 50px;
+  background: white;
+  border-top: 1px solid #0091DE;
+  padding: 10px;
+
+  input {
+    display: inline-block;
+    width: calc(100% - 80px);
+  }
+  .button {
+    display: inline-block;
+    width: 50px;
+    text-align: center;
+  }
 }

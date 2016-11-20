@@ -18,14 +18,13 @@ class App extends Component {
         super(props);
         this.state = {
           isLoggedIn: localGet('isLoggedIn'),
-          myTitle: 'Wrong title',
           users: [],
-          messages: [
-            {
-              user:'user1',
-              text:'text 1'
-            }
-          ],
+          fetchingUser: false,
+          messages: [],
+          conversationWith: {
+            name: 'Someone I know',
+            id: 'senderId'
+          },
           socket: io.connect('http://localhost:4000'),
           currentUser: localGet('user'), // example on how to use it
           isModalOpen: false,
@@ -43,8 +42,12 @@ class App extends Component {
     }
 
     handleMessageSubmit(message) {
-        var {messages, socket} = this.state;
-        messages.push(message);
+        const {messages, socket, currentUser} = this.state;
+        messages.push({
+          sender: currentUser.user.user_id,
+          date: Date.now(),
+          message: message,
+        });
         this.setState({messages});
         socket.emit('send:message', message);
     }
@@ -63,11 +66,13 @@ class App extends Component {
     }
 
     getListOfUsers() {
+      this.setState({fetchingUser: true});
       fetch(`http://localhost:4000/api/users?token=${this.state.currentUser.lifeworks_token}`)
         .then((results) => results.json())
         .then((results) => {
           this.setState({
             users: results,
+            fetchingUser: false,
           });
         })
         .catch(console.error);
@@ -82,19 +87,22 @@ class App extends Component {
             <SplitPane split="horizontal" enableResizing={false} size={50}>
               <div><Header /></div>
               <SplitPane split="vertical" minSize={50} defaultSize={100}>
-                <div>
-                <div onClick={() => this.setState({isModalOpen: true})}>Open Modal</div>
+                <div className="conversations-pane">
+                  <div onClick={() => this.setState({isModalOpen: true})}>Open Modal</div>
                 </div>
                 <SplitPane split="vertical" defaultSize={200} primary="second">
-                  <div>
-                      <MessageList messages={this.state.messages}/>
-                      <MessageForm
-                        onMessageSubmit={this.handleMessageSubmit}
-                        user={this.state.user}
-                      />
+                  <div style={{height: '100%'}}>
+                    <MessageList
+                      messages={this.state.messages}
+                      conversationName={this.state.conversationWith.name}
+                    />
+                    <MessageForm
+                      onMessageSubmit={this.handleMessageSubmit}
+                      user={this.state.user}
+                    />
                   </div>
-                  <div>
-                    <UserList users={this.state.users}/>
+                  <div className="users-pane">
+                    <UserList users={this.state.users} isFetching={this.state.fetchingUser}/>
                   </div>
                 </SplitPane>
               </SplitPane>
