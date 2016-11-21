@@ -38,6 +38,7 @@ class App extends Component {
         this.getListOfConversations = this.getListOfConversations.bind(this);
         this.onLogout = this.onLogout.bind(this);
         this.onUserClicked = this.onUserClicked.bind(this);
+        this.onConversationClicked = this.onConversationClicked.bind(this);
     }
 
     componentDidMount() {
@@ -131,7 +132,7 @@ class App extends Component {
           var conversationDetails = results.map((result) => {
             return (
               {
-                user: findUser(result.users[0], this.state.users),
+                user: findUser(result.users[0], this.state.users, result.users[1]),
                 conversation: result
               }
             )
@@ -178,7 +179,23 @@ class App extends Component {
       });
       this.state.socket.emit('join:conversation', {
         targetList: [user.user_id],
+      });
+    }
+    onConversationClicked(conversation) {
+      const currentConversation = {
+        name: conversation.user.name,
+        id: conversation.user.user_id,
+        conversationId: null,
+      };
 
+      localSet('currentConversation', currentConversation);
+
+      this.setState({
+        currentConversation,
+        messages: [],
+      });
+      this.state.socket.emit('join:conversation', {
+        targetList: [conversation.user.user_id],
       });
     }
 
@@ -195,7 +212,7 @@ class App extends Component {
                   <ConversationList
                     conversations={this.state.conversations}
                     isFetching={this.state.fetchingConversations}
-                    onUserClicked={this.onUserClicked}
+                    onConversationClicked={this.onConversationClicked}
                   />
                 </div>
                 <SplitPane split="vertical" minSize={150} defaultSize={200} primary="second">
@@ -243,8 +260,12 @@ App.propTypes = {
 
 export default App;
 
-const findUser = (searchId, users) => {
+const findUser = (id, users, alternativeId) => {
   let foundUser = {};
+  var searchId = id;
+  if (!searchId) {
+    searchId = alternativeId;
+  }
   users.map((user) => {
     if (user.user_id === searchId) {
       foundUser = user;

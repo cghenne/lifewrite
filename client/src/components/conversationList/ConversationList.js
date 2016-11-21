@@ -21,7 +21,7 @@ const ConversationList = React.createClass({
             {this.props.conversations &&
               this.props.conversations.map((conversation, key) => {
                 return (
-                  <li className="new" key={key} onClick={() => this.props.onUserClicked(conversation)}>
+                  <li className="new" key={key} onClick={() => this.props.onConversationClicked(conversation)}>
                     <div>
                       {conversation.user.name}
                     </div>
