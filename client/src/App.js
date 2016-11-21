@@ -30,6 +30,7 @@ class App extends Component {
           isModalOpen: false,
           conversations: [],
           onlineUsers: null,
+          selectedConversation: null,
         };
         this.handleMessageSubmit = this.handleMessageSubmit.bind(this);
         this.closeModal = this.closeModal.bind(this);
@@ -52,10 +53,9 @@ class App extends Component {
             this.fetchConversationHistory(this.state.currentConversation.conversationId);  
       }
       this.state.socket.on('connect', () => {
-
         this.state.socket.on('receive:message', data => {
           let {messages} = this.state;
-          if (localGet('currentConversation').conversationId === data.conversationId) {
+          if (this.state.currentConversation.conversationId === data.conversationId) {
             messages.push(data.message);
             this.setState({messages: messages});
           } else {
@@ -70,8 +70,10 @@ class App extends Component {
         this.state.socket.on('receive:joinedConversation', data => {
           const currentConversation = this.state.currentConversation;
           currentConversation.conversationId = data.conversationId;
+          if (!findHeldConversation(data.conversationId, this.state.conversations)) {
             localSet('currentConversation', currentConversation);
             this.fetchConversationHistory(currentConversation.conversationId);
+          }
           this.updateConversationList(currentConversation.conversationId, currentConversation.id);
         });
       });
@@ -206,9 +208,9 @@ class App extends Component {
         id: user.user_id,
         conversationId: null,
       };
-
       localSet('currentConversation', currentConversation);
-
+      console.log('Conversation clicked:')
+      console.log(currentConversation)
       this.setState({
         currentConversation,
         messages: [],
@@ -311,6 +313,16 @@ const findUser = (id, users, alternativeId) => {
   return foundUser;
 }
 
+const findHeldConversation = (id, conversations) => {
+  let foundConversation = {}
+  conversations.map((conversation) => {
+    if (conversation.conversation === id) {
+      foundConversation = conversation
+    }
+  })
+  return foundConversation
+}
+
 const handleUnreadMessage = (data, users) => {
   if (!("Notification" in window)) {
     console.log('this browser does not support notifications')
@@ -323,7 +335,7 @@ const handleUnreadMessage = (data, users) => {
   } else if (Notification.permission !== 'denied') {
     Notification.requestPermission(function (permission) {
       if (permission === "granted") {
-        let notification = new Notification(tittle, {body: data.message});
+        let notification = new Notification(tittle, {body: data.message.message});
       }
     });
   }
