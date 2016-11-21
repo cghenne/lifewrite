@@ -5,6 +5,9 @@
     border-radius: 50%;
     float:left;
     margin-right: 5px;
+    width: 30px;
+    height:30px;
+    background: gray;
   }
   .user-status {
     margin-left: 22px;
@@ -26,7 +29,9 @@
   .away .user-status {
     background-color: orange;
   }
-
+  .offline .user-status {
+    background-color: #fefefe;
+  }
   ul {
     height: 100%;
     margin: 0;
