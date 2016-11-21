@@ -50,7 +50,9 @@ class UserList extends Component {
             />
             {this.props.users && this.props.users.map((user, key) => {
               // if filter, look for match
-              if (this.state.filter !== '' && user.name.toUpperCase().indexOf(this.state.filter.toUpperCase()) > -1){
+              //console.log(user.user_id);
+              console.log(this.props.currentUserId);
+              if (this.state.filter !== '' && user.name.toUpperCase().indexOf(this.state.filter.toUpperCase()) > -1 && this.props.currentUserId !== user.user_id){
                 const image = cloudinary(user.image_profile, 'h_30,w_30,c_fill');
                 return (
                   <li className={isOnline(user, this.props.onlineUsers) ? 'online' : 'offline'} key={key} onClick={() => this.props.onUserClicked(user)}>
@@ -62,7 +64,7 @@ class UserList extends Component {
                   </li>
                 );
                 // not filter, only connected
-              } else if (this.state.filter === '' && isOnline(user, this.props.onlineUsers)) {
+              } else if (this.state.filter === '' && isOnline(user, this.props.onlineUsers) && this.props.currentUserId !== user.user_id) {
                 const image = cloudinary(user.image_profile, 'h_30,w_30,c_fill');
                 return (
                   <li className={isOnline(user, this.props.onlineUsers) ? 'online' : 'offline'} key={key} onClick={() => this.props.onUserClicked(user)}>

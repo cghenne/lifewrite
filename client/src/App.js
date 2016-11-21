@@ -274,6 +274,7 @@ class App extends Component {
                       isFetching={this.state.fetchingUsers}
                       onUserClicked={this.onUserClicked}
                       onlineUsers={this.state.onlineUsers}
+                      currentUserId={this.state.currentUser.user.user_id}
                     />
                   </div>
                 </SplitPane>
