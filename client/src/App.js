@@ -54,6 +54,9 @@ class App extends Component {
           console.log(data);
           messages.push(data.message);
           this.setState({messages: messages});
+          if (data.conversationId !== localGet('currentConversation').id) {
+
+          }
         });
 
         this.state.socket.on('update:userlist', data => {
@@ -64,7 +67,7 @@ class App extends Component {
           const currentConversation = this.state.currentConversation;
           currentConversation.conversationId = data.conversationId;
           localSet('currentConversation', currentConversation);
-
+          console.log(currentConversation);
           fetch(`${SERVER_URL}/api/conversation/${data.conversationId}/history/${Date.now()}`)
           .then(results => results.json())
           .then(res => {
@@ -76,6 +79,10 @@ class App extends Component {
           });
         });
       });
+
+    }
+
+    fetchConversationHistory(conversationId) {
 
     }
 
@@ -133,10 +140,11 @@ class App extends Component {
             return (
               {
                 user: findUser(result.users[0], this.state.users, result.users[1]),
-                conversation: result
+                conversation: result._id
               }
             )
           });
+          console.log(conversationDetails);
           this.setState({
             conversations: conversationDetails,
             fetchingConversations: false,
