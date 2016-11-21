@@ -52,7 +52,7 @@ class App extends Component {
         this.state.socket.on('receive:message', data => {
           let {messages} = this.state;
           console.log(data);
-          if (localGet('currentConversation').id === data.conversationId) {
+          if (localGet('currentConversation').conversationId === data.conversationId) {
             messages.push(data.message);
             this.setState({messages: messages});
           } else {
