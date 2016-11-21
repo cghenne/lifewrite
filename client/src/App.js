@@ -52,10 +52,11 @@ class App extends Component {
         this.state.socket.on('receive:message', data => {
           let {messages} = this.state;
           console.log(data);
-          messages.push(data.message);
-          this.setState({messages: messages});
-          if (data.conversationId !== localGet('currentConversation').id) {
-
+          if (localGet('currentConversation').id === data.conversationId) {
+            messages.push(data.message);
+            this.setState({messages: messages});
+          } else {
+            handleUnreadMessage(data, this.state.users)
           }
         });
 
@@ -280,6 +281,25 @@ const findUser = (id, users, alternativeId) => {
     }
   });
   return foundUser;
+}
+
+const handleUnreadMessage = (data, users) => {
+  if (!("Notification" in window)) {
+    console.log('this browser does not support notifications')
+    return
+  }
+  const user = findUser(data.sender, users)
+  console.log(user)
+  let tittle = "Message from: " + user.name
+  if (Notification.permission === "granted") {
+    let notification = new Notification(tittle, {body: data.message.message});
+  } else if (Notification.permission !== 'denied') {
+    Notification.requestPermission(function (permission) {
+      if (permission === "granted") {
+        let notification = new Notification(tittle, {body: data.message});
+      }
+    });
+  }
 }
 
 const customStyles = {
