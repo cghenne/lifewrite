@@ -39,11 +39,12 @@ const setupIO = connectedIo => {
     });
 
     const sendInvites = (conversation) => {
+      console.log(conversation)
       conversation.users.map((userId) => {
         if (onlineUsers[userId]) {
           let userSocket = onlineUsers[userId];
           userSocket.join(conversation._id)
-          userSocket.emit('receive:joinedConversation', {conversationId: conversation._id})
+          userSocket.emit('receive:joinedConversation', {conversationId: conversation._id, owner: conversation.owner})
         }
       });
     }
