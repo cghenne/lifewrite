@@ -5,16 +5,6 @@ var entity;
 
 const ConversationHistoryModel = {};
 
-<<<<<<< HEAD
-ConversationHistoryModel.fetchOrCreate = (conversationId, timestamp) => {
-	let history = ConversationHistoryModel.findByTimestamp(conversationId, timestamp);
-	if (!history) {
-		history = ConversationHistoryModel.create(conversationId);
-	}
-	return history;
-}
-=======
->>>>>>> 88b7779a9fe2cf9a41ba93ed2aa455be91eff2a0
 ConversationHistoryModel.findById = (conversationId) => {
 	ConversationHistory.findOne({conversation_id: conversationId}).exec(function(err, history){
 		entity = history;
@@ -56,12 +46,7 @@ ConversationHistoryModel.create = (conversationId, historyToAdd) => {
   return conversationHistory;
 }
 
-<<<<<<< HEAD
-ConversationHistoryModel.addToHistory = (conversationId, timestamp, sender, message) => {
-	let conversationHistory = ConversationHistoryModel.fetchOrCreate(conversationId, timestamp);
-=======
 ConversationHistoryModel.addToHistory = (conversationId, data) => {
->>>>>>> 88b7779a9fe2cf9a41ba93ed2aa455be91eff2a0
 	let historyLogEntity = {
 		sender: data.message.sender,
 		message: data.message.message,
