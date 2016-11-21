@@ -9,7 +9,7 @@ const ConversationHistoryModel = {};
 ConversationHistoryModel.fetchOrCreate = (conversationId, timestamp) => {
 	let history = ConversationHistoryModel.findByTimestamp(conversationId, timestamp);
 	if (!history) {
-		history = ConversationHistoryModel.create(conversationId);  
+		history = ConversationHistoryModel.create(conversationId);
 	}
 	return history;
 }
@@ -45,7 +45,7 @@ ConversationHistoryModel.create = (conversationId) => {
 }
 
 ConversationHistoryModel.addToHistory = (conversationId, timestamp, sender, message) => {
-	let conversationHistory = ConversationHistoryModel.findByTimestamp(conversationId, timestamp);
+	let conversationHistory = ConversationHistoryModel.fetchOrCreate(conversationId, timestamp);
 	let historyLogEntity = {
 		sender: sender,
 		message: message
