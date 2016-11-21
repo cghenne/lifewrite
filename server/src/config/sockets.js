@@ -39,7 +39,6 @@ const setupIO = connectedIo => {
     });
 
     const sendInvites = (conversation) => {
-      console.log(conversation)
       conversation.users.map((userId) => {
         if (onlineUsers[userId]) {
           let userSocket = onlineUsers[userId];
