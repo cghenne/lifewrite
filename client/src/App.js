@@ -48,7 +48,9 @@ class App extends Component {
         this.state.socket.emit('login', {userId: this.state.currentUser.user.user_id});
         this.getListOfUsers();
       }
-
+      if(this.state.currentConversation) {
+            this.fetchConversationHistory(this.state.currentConversation.conversationId);  
+      }
       this.state.socket.on('connect', () => {
 
         this.state.socket.on('receive:message', data => {
