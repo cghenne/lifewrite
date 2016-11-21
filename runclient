@@ -1,5 +1,5 @@
 SERVERIP=$1
 if [ -z "$1" ]; then
-    SERVERIP="192.168.0.16"
+    SERVERIP="10.100.10.209"
 fi
 SERVER_URL="http://$SERVERIP:4000" npm run client

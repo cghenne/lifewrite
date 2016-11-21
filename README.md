@@ -22,7 +22,9 @@ Login to the SSH
 
 From under terminal:
 - `npm install` (once)
+- `./runclient IP` or `./runclient` (to connect to common server)
 
+Effectively the runclient is a shortcut to to:
 - `SERVER_URL="http://localhost:4000" npm run client` to start the client development build at [http://localhost:3000](http://localhost:3000)
 
 
