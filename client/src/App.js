@@ -39,6 +39,8 @@ class App extends Component {
         this.onLogout = this.onLogout.bind(this);
         this.onUserClicked = this.onUserClicked.bind(this);
         this.onConversationClicked = this.onConversationClicked.bind(this);
+        this.updateConversationList = this.updateConversationList.bind(this);
+        this.fetchConversationHistory = this.fetchConversationHistory.bind(this);
     }
 
     componentDidMount() {
@@ -51,11 +53,14 @@ class App extends Component {
 
         this.state.socket.on('receive:message', data => {
           let {messages} = this.state;
+          console.log('im loggin new message')
           console.log(data);
+          console.log(localGet('currentConversation'))
           if (localGet('currentConversation').conversationId === data.conversationId) {
             messages.push(data.message);
             this.setState({messages: messages});
           } else {
+            console.log('sending notification')
             handleUnreadMessage(data, this.state.users)
           }
         });
@@ -68,23 +73,44 @@ class App extends Component {
           const currentConversation = this.state.currentConversation;
           currentConversation.conversationId = data.conversationId;
           localSet('currentConversation', currentConversation);
-          console.log(currentConversation);
-          fetch(`${SERVER_URL}/api/conversation/${data.conversationId}/history/${Date.now()}`)
-          .then(results => results.json())
-          .then(res => {
-            console.log(res);
-            this.setState({
-              currentConversation,
-              messages: res.history,
-            });
-          });
+          this.fetchConversationHistory(currentConversation.conversationId);
+          this.updateConversationList(currentConversation.conversationId, currentConversation.id);
         });
       });
 
     }
 
     fetchConversationHistory(conversationId) {
+      const currentConversation = this.state.currentConversation;
+      fetch(`${SERVER_URL}/api/conversation/${conversationId}/history/${Date.now()}`)
+      .then(results => results.json())
+      .then(res => {
+        console.log(res);
+        this.setState({
+          currentConversation,
+          messages: res.history,
+        });
+      });
+    }
 
+    updateConversationList(conversationId, userId) {
+      var found = false;
+      let {conversations} = this.state;
+      conversations.map((conversation) => {
+        if(conversation.conversation === conversationId) {
+          found = true;
+        }
+      });
+      if(!found) {
+          var newConversation = {
+            user: findUser(userId, this.state.users),
+            conversation: conversationId
+          }
+          conversations.push(newConversation);
+          this.setState({
+            conversations: conversations,
+          });
+      }
     }
 
     handleMessageSubmit(message) {
