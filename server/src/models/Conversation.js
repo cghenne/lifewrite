@@ -4,7 +4,6 @@ const ConversationModel = {};
 ConversationModel.findOneByUserIds = (targetUserIds, sendInvites, owner) => {
   Conversation.findOne({'users' : {"$all": targetUserIds}}).exec(function(err, document) {
     console.log('conversation from find')
-    console.log(document._id)
     if (document) {
           sendInvites(document)
     } else {
@@ -27,12 +26,14 @@ ConversationModel.findOneById = (conversationId) => {
   return entity;
 }
 
-ConversationModel.findAllForUser = (userId) => {
-  var entity = null;
-  Conversation.find({'users' : userId}).exec(function(err, document) {
-    entity = document;
+ConversationModel.findAllForUser = (userId, res) => {
+  Conversation.find({'users' : {$in: [userId]}}).exec(function(err, document) {
+    if (document) {
+      res.status(200).send(document)
+    } else {
+      res.status(200).send([])
+    }
   });
-  return entity;
 }
 
 ConversationModel.create = (ownerId, targetUserIds, name = "Default", topic = "", sendInvites) => {

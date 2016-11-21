@@ -17,17 +17,15 @@ const setupIO = connectedIo => {
       console.log(data.userId)
       connectedSocket.userId = data.userId;
       onlineUsers[connectedSocket.userId] = connectedSocket
-      io.sockets.emit('update:userlist', {users: _.keys(onlineUsers)})
+      updateUserList()
     })
 
     connectedSocket.on('join:conversation', function (data) {
       let conversation; 
       const conversationId = data.conversationId
       if (conversationId) {
-        console.log('Starting find by conversation id')
         conversation = ConversationModel.findOneById(conversationId, sendInvites);
       } else {
-        console.log('Starting find by target')
         conversation = ConversationModel.fetchOrCreate(connectedSocket.userId, data.targetList, sendInvites);
       }
     });
@@ -42,14 +40,20 @@ const setupIO = connectedIo => {
       });
     }
 
+    const updateUserList = () => {
+      io.sockets.emit('update:userlist', {users: _.keys(onlineUsers)})
+    }
+
     connectedSocket.on('send:message', function (data) {
       console.log('got message')
-      console.log(data)
       connectedSocket.broadcast.to(data.conversationId).emit(
         'receive:message',
         {conversationId: data.conversationId, sender: connectedSocket.userId, message: data.message}
       )
-      HistoryModel.addToHistory(data.conversationId, new Date().getTime(), connectedSocket.userId, data.message)
+      HistoryModel.addToHistory(
+          data.conversationId,
+          data
+       )
     });
 
     connectedSocket.on('logout', () => {
@@ -57,7 +61,7 @@ const setupIO = connectedIo => {
       if (connectedSocket.hasOwnProperty('userId') && onlineUsers[connectedSocket.userId]) {
           delete onlineUsers[connectedSocket.userId]
       }
-      io.emit('update:userlist', onlineUsers)
+      updateUserList()
     })
 
     connectedSocket.on('disconnect', () => {
@@ -65,8 +69,8 @@ const setupIO = connectedIo => {
       if (connectedSocket.hasOwnProperty('userId') && onlineUsers[connectedSocket.userId]) {
           delete onlineUsers[connectedSocket.userId]
       }
+      updateUserList()
       connectedSocket = null
-      io.emit('update:userlist', onlineUsers)
     });
   });
 }

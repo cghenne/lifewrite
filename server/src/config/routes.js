@@ -21,10 +21,6 @@ router.route('/api/login').post((req, res) => {
   .catch(console.error);
 });
 
-router.route('/api/conversation').post((req, res) => {
-  api.conversation.createOrFetchConversation(req, res)
-});
-
 router.route('/api/conversation/:conversationId').put((req, res) => {
   api.conversation.updateConversation(req, res, req.params.conversationId)
 });
@@ -34,11 +30,6 @@ router.route('/api/conversation/user/:userId').get((req, res) => {
 });
 
 router.route('/api/conversation/:conversationId/history/:timestamp').get((req, res) => {
-  api.history.getHistory(req, res, req.params.conversationId, req.params.timestamp)
+  api.history.getHistory(req, res, req.params.conversationId, parseInt(req.params.timestamp))
 });
-
-router.route('/api/conversation/:conversationId/history/:timestamp').post((req, res) => {
-  api.history.addToHistory(req, res, req.params.conversationId, req.params.timestamp)
-});
-
 module.exports = router
