@@ -30,6 +30,14 @@ const setupIO = connectedIo => {
       }
     });
 
+    connectedSocket.on('inviteto:conversation', function (data) {
+      const inviteTarget = data.targetId;
+      const conversationId = data.conversationId;
+      if (conversationId) {
+        conversation = ConversationModel.fetchOrCreate(conversationId, inviteTarget, sendInvites);
+      }
+    });
+
     const sendInvites = (conversation) => {
       conversation.users.map((userId) => {
         if (onlineUsers[userId]) {

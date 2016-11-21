@@ -27,6 +27,16 @@ ConversationModel.findAllForUser = (userId, res) => {
   });
 }
 
+ConversationModel.addToConversation = (conversationId, targetUserId, sendInvites) => {
+  Conversation.findById(conversationId, function(err, document) {
+      if (document) {
+        document.users.push(targetUserId);
+        document.save()
+        sendInvites(document)
+      }
+  })
+}
+
 ConversationModel.create = (ownerId, targetUserIds, name = "Default", topic = "", sendInvites) => {
   var conversation = new Conversation({
     name: name + 'Conversation',
