@@ -55,14 +55,10 @@ class App extends Component {
 
         this.state.socket.on('receive:message', data => {
           let {messages} = this.state;
-          console.log('im loggin new message')
-          console.log(data);
-          console.log(localGet('currentConversation'))
           if (localGet('currentConversation').conversationId === data.conversationId) {
             messages.push(data.message);
             this.setState({messages: messages});
           } else {
-            console.log('sending notification')
             handleUnreadMessage(data, this.state.users)
           }
         });
@@ -74,12 +70,8 @@ class App extends Component {
         this.state.socket.on('receive:joinedConversation', data => {
           const currentConversation = this.state.currentConversation;
           currentConversation.conversationId = data.conversationId;
-          //console.log('joined data');
-          //console.log();
-          //if(data.owner === this.state.currentUser.user.user_id) {
             localSet('currentConversation', currentConversation);
             this.fetchConversationHistory(currentConversation.conversationId);
-          //}
           this.updateConversationList(currentConversation.conversationId, currentConversation.id);
         });
       });
@@ -168,16 +160,19 @@ class App extends Component {
       fetch(`${SERVER_URL}/api/conversation/user/${currentUser.user.user_id}`)
         .then((results) => results.json())
         .then((results) => {
-          console.log(results);
-          var conversationDetails = results.map((result) => {
+            var conversationDetails = results.map((result) => {
+            if (result.users[0] === currentUser.user.user_id) {
+              var user = findUser(result.users[1], this.state.users)
+            } else {
+              var user = findUser(result.users[0], this.state.users)
+            }
             return (
               {
-                user: findUser(result.users[0], this.state.users, result.users[1]),
+                user: user,
                 conversation: result._id
               }
             )
           });
-          console.log(conversationDetails);
           this.setState({
             conversations: conversationDetails,
             fetchingConversations: false,
@@ -322,7 +317,6 @@ const handleUnreadMessage = (data, users) => {
     return
   }
   const user = findUser(data.sender, users)
-  console.log(user)
   let tittle = "Message from: " + user.name
   if (Notification.permission === "granted") {
     let notification = new Notification(tittle, {body: data.message.message});

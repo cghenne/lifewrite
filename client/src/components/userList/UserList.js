@@ -50,8 +50,6 @@ class UserList extends Component {
             />
             {this.props.users && this.props.users.map((user, key) => {
               // if filter, look for match
-              //console.log(user.user_id);
-              console.log(this.props.currentUserId);
               if (this.state.filter !== '' && user.name.toUpperCase().indexOf(this.state.filter.toUpperCase()) > -1 && this.props.currentUserId !== user.user_id){
                 const image = cloudinary(user.image_profile, 'h_30,w_30,c_fill');
                 return (
