@@ -72,8 +72,12 @@ class App extends Component {
         this.state.socket.on('receive:joinedConversation', data => {
           const currentConversation = this.state.currentConversation;
           currentConversation.conversationId = data.conversationId;
-          localSet('currentConversation', currentConversation);
-          this.fetchConversationHistory(currentConversation.conversationId);
+          //console.log('joined data');
+          //console.log();
+          //if(data.owner === this.state.currentUser.user.user_id) {
+            localSet('currentConversation', currentConversation);
+            this.fetchConversationHistory(currentConversation.conversationId);
+          //}
           this.updateConversationList(currentConversation.conversationId, currentConversation.id);
         });
       });
